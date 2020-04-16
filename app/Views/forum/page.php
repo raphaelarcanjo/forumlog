@@ -1,0 +1,1 @@
+<h3>Essa é a área para um tópico específico do forum.</h3>

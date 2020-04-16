@@ -1,0 +1,1 @@
+<h3>Blog do usuário <?php echo $user['name']; ?></h3>

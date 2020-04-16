@@ -9,6 +9,40 @@ class Home extends BaseController
 		echo view('templates/footer');
 	}
 
-	//--------------------------------------------------------------------
+	public function blog()
+	{
+		$data['title'] = 'Blog';
+
+		echo view('templates/header', $data);
+		echo view('blog/home');
+		echo view('templates/footer');
+	}
+
+	public function forum($id = null)
+	{
+		$data['title'] = 'Forum';
+		
+		echo view('templates/header', $data);
+		echo view('forum/home');
+		echo view('templates/footer');
+	}
+
+	public function about()
+	{
+		$data['title'] = 'Sobre';
+		
+		echo view('templates/header', $data);
+		echo view('about');
+		echo view('templates/footer');
+	}
+
+	public function contact()
+	{
+		$data['title'] = 'Sobre';
+		
+		echo view('templates/header', $data);
+		echo view('home');
+		echo view('templates/footer');
+	}
 
 }
