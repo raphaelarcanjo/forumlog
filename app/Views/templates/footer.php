@@ -31,12 +31,22 @@
                     <label for="message" class="grey-text text-lighten-1 <?php echo (isset($message)) ? 'active' : ''; ?>">Deixe sua mensagem</label>
                 </div>
                 <div class="input-field">
-                    <input type="submit" value="Enviar" class="waves-effect waves-light btn" />
+                    <button type="submit" class="waves-effect waves-light btn">Enviar</button>
                 </div>
             </form>
         </div>
     </div>
-    <script src="assets/js/script.js"></script>
+
+    <!-- Polyfill script -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=es2015"></script>
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="<?php echo base_url(); ?>/assets/js/script.js"></script>
 </footer>
 
 </body>

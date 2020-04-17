@@ -5,3 +5,12 @@
 main {
     min-height: 75vh;
 }
+
+.brand-logo {
+    height: inherit;
+}
+
+.brand-logo img {
+    height: 100%;
+    padding: 0.5rem;
+}
