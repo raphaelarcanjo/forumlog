@@ -9,9 +9,10 @@
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 
             <ul id="nav-desktop" class="right hide-on-med-and-down">
-                <li><a href="<?php echo base_url('home/forum'); ?>">Forum</a></li>
-                <li><a href="<?php echo base_url('home/blog'); ?>">Blog</a></li>
-                <li><a href="<?php echo base_url('home/about'); ?>">Sobre</a></li>
+                <li class="<?php echo($title == 'Home') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
+                <li class="<?php echo($title == 'Forum') ? 'active' : ''; ?>"><a href="<?php echo base_url('home/forum'); ?>">Forum</a></li>
+                <li class="<?php echo($title == 'Blog') ? 'active' : ''; ?>"><a href="<?php echo base_url('home/blog'); ?>">Blog</a></li>
+                <li class="<?php echo($title == 'Sobre') ? 'active' : ''; ?>"><a href="<?php echo base_url('home/about'); ?>">Sobre</a></li>
                 <li>
                     <a href="#modalLogin" class="modal-trigger">
                         Login
@@ -22,9 +23,10 @@
     </nav>
     
     <ul id="nav-mobile" class="sidenav">
-        <li><a href="<?php echo base_url('home/forum'); ?>">Forum</a></li>
-        <li><a href="<?php echo base_url('home/blog'); ?>">Blog</a></li>
-        <li><a href="<?php echo base_url('home/about'); ?>">Sobre</a></li>
+        <li class="<?php echo($title == 'Home') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
+        <li class="<?php echo($title == 'Forum') ? 'active' : ''; ?>"><a href="<?php echo base_url('home/forum'); ?>">Forum</a></li>
+        <li class="<?php echo($title == 'Blog') ? 'active' : ''; ?>"><a href="<?php echo base_url('home/blog'); ?>">Blog</a></li>
+        <li class="<?php echo($title == 'Sobre') ? 'active' : ''; ?>"><a href="<?php echo base_url('home/about'); ?>">Sobre</a></li>
         <li>
             <a href="#!" class="dropdown-trigger" data-target="dropdownLogin">
                 Login<i class="material-icons right">arrow_drop_down</i>
@@ -50,6 +52,7 @@
                     <button type="submit" class="waves-effect waves-light btn">Enviar</button>
                     <a href="<?php echo base_url('user/register'); ?>" class="waves-effect waves-light btn">Cadastre-se</a>
                 </div>
+                <a href="<?php echo base_url('user/recover'); ?>" class="waves-effect btn-flat">Esqueci a senha</a>
             </form>
         </li>
     </ul>
@@ -70,6 +73,7 @@
                     <button type="submit" class="waves-effect waves-light btn">Enviar</button>
                     <a href="<?php echo base_url('user/register'); ?>" class="waves-effect waves-light btn">Cadastre-se</a>
                 </div>
+                <a href="<?php echo base_url('user/recover'); ?>" class="waves-effect btn-flat">Esqueci a senha</a>
             </form>
         </div>
         <div class="modal-footer">

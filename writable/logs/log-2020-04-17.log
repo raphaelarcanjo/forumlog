@@ -1,0 +1,10 @@
+CRITICAL - 2020-04-17 10:50:56 --> Call to undefined function print_helper()
+#0 C:\Users\rapha\Documents\Web\new_lab\forumlog\system\View\View.php(236): include()
+#1 C:\Users\rapha\Documents\Web\new_lab\forumlog\system\Common.php(1077): CodeIgniter\View\View->render('home', Array, true)
+#2 C:\Users\rapha\Documents\Web\new_lab\forumlog\app\Controllers\Home.php(11): view('home', Array)
+#3 C:\Users\rapha\Documents\Web\new_lab\forumlog\system\CodeIgniter.php(912): App\Controllers\Home->index()
+#4 C:\Users\rapha\Documents\Web\new_lab\forumlog\system\CodeIgniter.php(400): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#5 C:\Users\rapha\Documents\Web\new_lab\forumlog\system\CodeIgniter.php(308): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\Users\rapha\Documents\Web\new_lab\forumlog\public\index.php(45): CodeIgniter\CodeIgniter->run()
+#7 C:\Users\rapha\Documents\Web\new_lab\forumlog\system\Commands\Server\rewrite.php(34): require_once('C:\\Users\\rapha\\...')
+#8 {main}

@@ -69,4 +69,13 @@ class User extends BaseController
 		echo view('templates/footer');
 	}
 
+	public function recover()
+	{
+		$data['title'] = 'Nova senha';
+		
+		echo view('templates/header', $data);
+		echo view('recover');
+		echo view('templates/footer');
+	}
+
 }

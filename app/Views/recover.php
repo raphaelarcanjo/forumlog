@@ -1,20 +1,6 @@
-<h3>Cadastro</h3>
+<h3>Criar nova senha</h3>
 
-<form action="<?php echo base_url('home/register') ?>" method="post">
-    <div class="input-field">
-        <input type="text" id="name" name="name" class="validate" maxlength="80" required />
-        <label for="name">Nome completo</label>
-    </div>
-    <div class="input-field">
-        <input type="text" id="regLogin" name="login" class="validate" required />
-        <label for="regLogin">Nome único (login)</label>
-        <small>Esse nome será usado para visitas ao seu blog por outros usuários e também para fazer login na usa conta.</small>
-    </div>
-    <div class="input-field">
-        <input type="email" id="email" name="email" class="validate" maxlength="80" required />
-        <label for="email">E-mail</label>
-        <span class="helper-text" data-error="Formato de e-mail inválido" data-success="E-mail válido">Digite um e-mail válido</span>
-    </div>
+<form action="<?php echo base_url('user/recover') ?>" method="post">
     <div class="input-field">
         <input type="password" id="regPassword" name="password" minlength="8" class="validate" required />
         <label for="regPassword">Senha</label>
