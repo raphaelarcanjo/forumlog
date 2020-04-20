@@ -1,1 +1,0 @@
-<h3>Essa é a área onde se encontram os tópicos do forum.</h3>
