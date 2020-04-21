@@ -12,7 +12,7 @@
                 <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forumlog/forum')}}">Forum</a></li>
                 <li class="@if ($title == 'Blog') active @endif"><a href="{{url('forumlog/blog')}}">Blog</a></li>
                 <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('forumlog/about')}}">Sobre</a></li>
-                <li>
+                <li class="teal">
                     <a href="#modalLogin" class="modal-trigger">
                         Login
                     </a>

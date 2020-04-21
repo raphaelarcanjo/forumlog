@@ -18,11 +18,11 @@ Route::prefix('forumlog')->group(function () {
     Route::get('about', 'Home@about');
     Route::get('forum', 'Home@forum');
     Route::get('blog', 'Home@blog');
-    Route::get('contact', 'Home@contact');
+    Route::post('contact', 'Home@contact');
 });
 
 Route::prefix('forumlog/user')->group(function () {
-    Route::get('register', 'User@register');
-    Route::get('login', 'User@login');
+    Route::match(['get','post'],'register', 'User@register');
+    Route::post('login', 'User@login');
     Route::get('recover', 'User@recover');
 });

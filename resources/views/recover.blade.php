@@ -4,7 +4,7 @@
 @section('content')
     <h3>Criar nova senha</h3>
 
-    <form action="{{url('user/recover')}}" method="post">
+    <form action="{{url('forumlog/user/recover')}}" method="post">
         <div class="input-field">
             <input type="password" id="regPassword" name="password" minlength="8" class="validate" required />
             <label for="regPassword">Senha</label>
@@ -17,7 +17,7 @@
         </div>
         <div class="input-field">
             <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-            <a href="{{url('')}}" class="waves-effect waves-light red btn right">Voltar</a>
+            <a href="{{url('forumlog/')}}" class="waves-effect waves-light red btn right">Voltar</a>
         </div>
     </form>
 @endsection

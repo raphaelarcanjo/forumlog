@@ -4,7 +4,7 @@
 @section('content')
     <h3>Cadastro</h3>
 
-    <form action="{{url('user/register')}}" method="post">
+    <form action="{{url('forumlog/user/register')}}" method="post">
         <div class="input-field">
             <input type="text" id="name" name="name" class="validate" maxlength="80" required />
             <label for="name">Nome completo</label>
@@ -31,7 +31,7 @@
         </div>
         <div class="input-field">
             <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-            <a href="{{url('')}}" class="waves-effect waves-light red btn right">Voltar</a>
+            <a href="{{url('forumlog/')}}" class="waves-effect waves-light red btn right">Voltar</a>
         </div>
     </form>
 @endsection
