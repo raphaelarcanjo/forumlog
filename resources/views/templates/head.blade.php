@@ -7,13 +7,15 @@
     <meta name="author" content="Raphael Arcanjo | http://github.com/raphaelarcanjo">
     <meta name="description" content="">
 
+    <link rel="shortcut icon" href="{{url('forumlog/public/favicon.ico')}}" type="image/x-icon">
+
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!-- Material icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{url('assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
 
     <title>ForumLog | @yield('title')</title>
 </head>

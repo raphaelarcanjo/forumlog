@@ -8,14 +8,15 @@
         <div class="col s12 m4">
             <h4>LINKS</h4>
             <ul>
-                <li><a href="forum" class="grey-text text-lighten-1">Forum</a></li>
-                <li><a href="blog" class="grey-text text-lighten-1">Blog</a></li>
-                <li><a href="about" class="grey-text text-lighten-1">Sobre</a></li>
+                <li><a href="{{url('forumlog/forum')}}" class="grey-text text-lighten-1">Forum</a></li>
+                <li><a href="{{url('forumlog/blog')}}" class="grey-text text-lighten-1">Blog</a></li>
+                <li><a href="{{url('forumlog/about')}}" class="grey-text text-lighten-1">Sobre</a></li>
+                <li><a href="{{url('forumlog/user/register')}}" class="grey-text text-lighten-1">Cadastre-se</a></li>
             </ul>
         </div>
         <div class="col s12 m8">
             <h4>CONTATO</h4>
-            <form action="{{url('contact')}}" method="post">
+            <form action="{{url('forumlog/contact')}}" method="post">
                 <div class="input-field">
                     <input type="text" id="name" name="name" class="validate" value="<?php echo (isset($name)) ? $name : ''; ?>" required />
                     <label for="name" class="grey-text text-lighten-1 <?php echo (isset($name)) ? 'active' : ''; ?>">Nome completo</label>
@@ -39,6 +40,12 @@
         </div>
     </div>
 
+    <div class="footer-copyright">
+        <div class="container">
+            &copy; 2020 Copyright <a href="https://github.com/raphaelarcanjo" class="grey-text text-lighten-2 right">Raphael Arcanjo</a>
+        </div>
+    </div>
+
     <!-- Polyfill script -->
     <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=es2015"></script>
 
@@ -48,7 +55,7 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-    <script src="{{url('assets/js/script.js')}}"></script>
+    <script src="{{asset('js/script.js')}}"></script>
 </footer>
 
 </body>
