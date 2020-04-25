@@ -7,7 +7,7 @@
 <h4>Seu Fórum e Blog num só lugar!</h4>
 
 <blockquote>
-    Cadastre-se e aproveite para conferir os tópicos do fórum, postados pelos usuários já cadastrados.
+    <a href="{{url('forumlog/user/register')}}">Cadastre-se</a> e aproveite para conferir os tópicos do fórum, postados pelos usuários já cadastrados.
 </blockquote>
 
 @endsection

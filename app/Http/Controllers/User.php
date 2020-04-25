@@ -21,9 +21,13 @@ class User extends Controller
         return view('blog.home', ['title' => 'Blog']);
     }
 
-    public function register()
+    public function register(Request $request)
     {
-        return view('register',['title' => 'Cadastro']);
+        $data = $request->all();
+
+        $data['title'] = 'Cadastro';
+        
+        return view('register',$data);
     }
 
     public function login()

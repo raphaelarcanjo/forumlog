@@ -1,4 +1,8 @@
 @include('templates.head')
+<body>
+
+<div id="app">
+
 <header>
     <nav>
         <div class="nav-wrapper">
@@ -35,24 +39,24 @@
 
     <ul id="dropdownLogin" class="dropdown-content">
         <li>
-            <h4>Login</h4>
-        </li>
-        <li>
-            <form action="{{url('forumlog/user/login')}}" method="post">
-                <div class="input-field">
-                    <input type="text" id="login" name="login" class="validate" required />
-                    <label for="login">Login</label>
-                </div>
-                <div class="input-field">
-                    <input type="password" id="password" name="password" class="validate" required />
-                    <label for="password">Senha</label>
-                </div>
-                <div class="input-field">
-                    <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                    <a href="{{url('forumlog/user/register')}}" class="waves-effect waves-light btn">Cadastre-se</a>
-                </div>
-                <a href="{{url('forumlog/user/recover')}}" class="waves-effect btn-flat">Esqueci a senha</a>
-            </form>
+            <div class="container">
+                <h4>Login</h4>
+                <form action="{{url('forumlog/user/login')}}" method="post">
+                    <div class="input-field">
+                        <input type="text" id="login" name="login" class="validate" required />
+                        <label for="login">Login</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" id="password" name="password" class="validate" required />
+                        <label for="password">Senha</label>
+                    </div>
+                    <div class="input-field">
+                        <button type="submit" class="waves-effect waves-light btn">Enviar</button>
+                        <a href="{{url('forumlog/user/register')}}" class="waves-effect waves-light btn">Cadastre-se</a>
+                    </div>
+                    <a href="{{url('forumlog/user/recover')}}" class="waves-effect btn-flat">Esqueci a senha</a>
+                </form>
+            </div>
         </li>
     </ul>
 
