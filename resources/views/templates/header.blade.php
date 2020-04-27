@@ -42,6 +42,7 @@
             <div class="container">
                 <h4>Login</h4>
                 <form action="{{url('forumlog/user/login')}}" method="post">
+                    @csrf
                     <div class="input-field">
                         <input type="text" id="login" name="login" class="validate" required />
                         <label for="login">Login</label>
@@ -64,6 +65,7 @@
         <div class="modal-content">
             <h4>Login</h4>
             <form action="{{url('forumlog/user/login')}}" method="post">
+                @csrf
                 <div class="input-field">
                     <label for="loginM">Login</label>
                     <input type="text" name="login" id="loginM" class="validate" required />
