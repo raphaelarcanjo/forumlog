@@ -16,11 +16,21 @@
                 <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forumlog/forum')}}">Forum</a></li>
                 <li class="@if ($title == 'Blog') active @endif"><a href="{{url('forumlog/blog')}}">Blog</a></li>
                 <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('forumlog/about')}}">Sobre</a></li>
-                <li class="teal">
-                    <a href="#modalLogin" class="modal-trigger">
-                        Login
-                    </a>
-                </li>
+                @if (session('user') && session('token'))
+                    @if (session('token') == md5(session('user').'teste123'))
+                        <li class="red accent-2">
+                            <a href="{{url('forumlog/user/logout')}}" class="white-text">
+                                Logout
+                            </a>
+                        </li>
+                    @endif
+                @else
+                    <li class="teal">
+                        <a href="#modalLogin" class="modal-trigger">
+                            Login
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </nav>
@@ -30,11 +40,21 @@
         <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forumlog/forum')}}">Forum</a></li>
         <li class="@if ($title == 'Blog') active @endif"><a href="{{url('forumlog/blog')}}">Blog</a></li>
         <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('forumlog/about')}}">Sobre</a></li>
-        <li>
-            <a href="#!" class="dropdown-trigger" data-target="dropdownLogin">
-                Login<i class="material-icons right">arrow_drop_down</i>
-            </a>
-        </li>
+        @if (session('user') && session('token'))
+            @if (session('token') == md5(session('user').'teste123'))
+                <li class="red accent-2">
+                    <a href="{{url('forumlog/user/logout')}}" class="white-text">
+                        Logout
+                    </a>
+                </li>
+            @endif
+        @else
+            <li>
+                <a href="#!" class="dropdown-trigger" data-target="dropdownLogin">
+                    Login<i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        @endif
     </ul>
 
     <ul id="dropdownLogin" class="dropdown-content">

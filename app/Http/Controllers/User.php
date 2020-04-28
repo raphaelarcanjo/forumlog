@@ -18,9 +18,26 @@ class User extends Controller
         return view('forum.home', ['title' => 'Forum']);
     }
 
-    public function blog()
+    public function blog(Request $request, $tagname = null)
     {
-        return view('blog.home', ['title' => 'Blog']);
+        $data['title'] = 'Blog';
+            
+        if ($tagname) {
+            $user = new UserModel();
+            $perfil = $user
+                ->where([
+                    ['tagname', '=', $tagname],
+                    ['ban', '=', 0]
+                    ])
+                ->first();
+
+            if (!empty($perfil))
+            {
+                $data['name'] = explode(' ',$perfil['name'])[0];
+            }
+        }
+
+        return view('blog.blog', $data);
     }
 
     public function register(Request $request)
@@ -61,7 +78,11 @@ class User extends Controller
             $user->birth      = $request->input('birth');
             $user->password   = md5($request->input('password'));
 
-            if ($user->save()) return redirect('/');
+            if ($user->save()) return redirect('forumlog');
+            else {
+                $request->session()->put('error','Erro ao tentar cadastrar o usuário!');
+                return redirect('forumlog');
+            }
         }
 
         $data['title'] = 'Cadastro';
@@ -79,26 +100,40 @@ class User extends Controller
             ]);
             
             $user = new UserModel;
-            $login = $user->where('tagname',$request->input('login'))->first();
-
+            $login = $user
+            ->where([
+                ['tagname', '=', $request->input('login')],
+                ['ban', '=', 0]
+                ])
+                ->first();
+                
             if ($login) {
                 if ($login['password'] === md5($request->input('password'))) {
-                    echo "Senha correta!"; die;
+                    $request->session()->put('token', md5($request->input('login').'teste123'));
+                    $request->session()->put('user', $request->input('login'));
+                    
+                    return redirect('forumlog/user/blog/'.$login['tagname']);
                 } else {
-                    echo "Senha incorreta!"; die;
+                    $request->session()->flash('error', "A senha informada está incorreta!");
+                    return redirect('forumlog');
                 }
             } else {
-                echo "Login não encontrado!"; die;
+                $request->session()->flash('error', "Usuário não cadastrado ou banido!");
+                return redirect('forumlog');
             }
-
-            return view('home',['title' => 'Home']);
         }
         
-        return view('home',['title' => 'Home']);
+        return redirect('home');
+    }
+
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+        return redirect('forumlog');
     }
 
     public function recover()
     {
-        return view('home',['title' => 'Home']);
+        return redirect('home');
     }
 }

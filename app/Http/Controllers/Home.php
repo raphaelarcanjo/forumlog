@@ -23,6 +23,14 @@ class Home extends Controller
 
     public function blog()
     {
+        if (session('user') && session('token'))
+        {
+            if (session('token') == md5(session('user').'teste123'))
+            {
+                return redirect('forumlog/user/blog/'.session('user'));
+            }
+        }
+        
         return view('blog.home', ['title' => 'Blog']);
     }
 

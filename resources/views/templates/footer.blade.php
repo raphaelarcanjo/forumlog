@@ -27,20 +27,20 @@
             <h4>CONTATO</h4>
             <form action="{{url('forumlog/contact')}}" method="post">
                 <div class="input-field">
-                    <input type="text" id="name" name="name" class="validate" value="<?php echo (isset($name)) ? $name : ''; ?>" required />
-                    <label for="name" class="grey-text text-lighten-1 <?php echo (isset($name)) ? 'active' : ''; ?>">Nome completo</label>
+                    <input type="text" id="name" name="name" class="validate" required />
+                    <label for="name" class="grey-text text-lighten-1">Nome completo</label>
                 </div>
                 <div class="input-field">
-                    <input type="email" id="email" name="email" class="validate" value="<?php echo (isset($email)) ? $email : ''; ?>" required />
-                    <label for="email" class="grey-text text-lighten-1 <?php echo (isset($email)) ? 'active' : ''; ?>">Seu e-mail</label>
+                    <input type="email" id="email" name="email" class="validate" required />
+                    <label for="email" class="grey-text text-lighten-1">Seu e-mail</label>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="subject" name="subject" class="validate" value="<?php echo (isset($subject)) ? $subject : ''; ?>" required />
-                    <label for="subject" class="grey-text text-lighten-1 <?php echo (isset($subject)) ? 'active' : ''; ?>">Assunto da mensagem</label>
+                    <input type="text" id="subject" name="subject" class="validate" required />
+                    <label for="subject" class="grey-text text-lighten-1">Assunto da mensagem</label>
                 </div>
                 <div class="input-field">
-                    <textarea id="message" name="message" class="materialize-textarea" required><?php echo (isset($message)) ? $message : ''; ?></textarea>
-                    <label for="message" class="grey-text text-lighten-1 <?php echo (isset($message)) ? 'active' : ''; ?>">Deixe sua mensagem</label>
+                    <textarea id="message" name="message" class="materialize-textarea" required></textarea>
+                    <label for="message" class="grey-text text-lighten-1">Deixe sua mensagem</label>
                 </div>
                 <div class="input-field">
                     <button type="submit" class="waves-effect waves-light btn">Enviar</button>
