@@ -8,15 +8,15 @@
         <form action="{{url('forumlog/user/recover')}}" method="post">
             @csrf
             <input type="hidden" name="recover" value="recover">
-            <input type="hidden" name="email" value="{{$user}}">
-            
+            <input type="hidden" name="user" value="{{$user}}">
+
             <div class="input-field">
                 <input type="password" id="regPassword" name="password" minlength="8" class="validate" required />
                 <label for="regPassword">Senha</label>
                 <span class="helper-text" data-error="A senha deve conter no mínimo 8 caracteres" data-success="Para sua segurança, use uma senha complexa">Digite uma senha segura</span>
             </div>
             <div class="input-field">
-                <input type="password" id="confirm" name="confirm" required />
+                <input type="password" id="confirm" name="confirm" onfocusout="confirmPass()" required />
                 <label for="confirm">Confirmar senha</label>
                 <span id="confirmHelper" class="helper-text" data-error="As senhas não conferem" data-success="Senhas conferem">Confirme a sua senha</span>
             </div>

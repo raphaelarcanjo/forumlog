@@ -24,7 +24,7 @@ Route::prefix('forumlog')->group(function () {
 Route::prefix('forumlog/user')->group(function () {
     Route::match(['get','post'],'register', 'User@register');
     Route::post('login', 'User@login');
-    Route::match(['get', 'post'], 'recover{token?}', 'User@recover');
+    Route::match(['get', 'post'], 'recover/{token?}', 'User@recover');
     Route::get('blog/{tagname?}', 'User@blog');
     Route::get('logout', 'User@logout');
 });

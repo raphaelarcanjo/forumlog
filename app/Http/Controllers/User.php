@@ -155,7 +155,7 @@ class User extends Controller
                 $to_address = $email;
                 $from_name = config('app.name');
                 $body = "Recuperação de Senha | ForumLog";
-                $link = url('user/recover').'/'.md5($email.date('Y-m-d'));
+                $link = url('forumlog/user/recover').'/'.md5($email.date('Y-m-d'));
 
                 $msgData = ['name' => $to_name, 'body' => $body, 'link' => $link];
 
@@ -163,13 +163,12 @@ class User extends Controller
                     $message->to($to_address, $to_name)->subject('Recuperação de Senha | ForumLog');
 
                     $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
-                    
-                    return redirect('forumlog');
                 });
             } else {
                 $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
-                return redirect('forumlog');
             }
+
+            return redirect('forumlog');
         }
 
         if ($token)
@@ -190,12 +189,19 @@ class User extends Controller
 
         if ($request->input('recover'))
         {
-            $user = new UserModel;
-            $save = [
-                'password' => $request->input('password')
-            ];
+            if ($request->input('password') === $request->input('confirm'))
+            {
+                $user = new UserModel;
+                $user = $user->where('email',$request->input('user'))->first();
+                $user->password = md5($request->input('password'));
+                $user->save();
+    
+                $request->session()->flash('success','Senha alterada com sucesso!');
+            } else {
+                $request->session()->flash('error','As senhas não conferem!');
+            }
             
-            $user->where($request->input('email'))->save($save);
+            return redirect('forumlog');
         }
 
         return view('recover', $data);
