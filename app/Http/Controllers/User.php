@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Mail;
 use App\UserModel;
+
 
 class User extends Controller
 {
@@ -65,8 +66,8 @@ class User extends Controller
             $user = new UserModel();
             
             $user->name       = $request->input('name');
-            $user->email      = lcfirst($request->input('email'));
-            $user->tagname    = lcfirst($request->input('tagname'));
+            $user->email      = strtolower($request->input('email'));
+            $user->tagname    = strtolower($request->input('tagname'));
             $user->phone      = json_encode($request->input('phone'));
             $user->cep        = (string)$request->input('cep');
             $user->address    = $request->input('address');
@@ -78,9 +79,12 @@ class User extends Controller
             $user->birth      = $request->input('birth');
             $user->password   = md5($request->input('password'));
 
-            if ($user->save()) return redirect('forumlog');
+            if ($user->save()) {
+                $request->session()->flash('success','Usuário cadastrado com sucesso!');
+                return redirect('forumlog');
+            }
             else {
-                $request->session()->put('error','Erro ao tentar cadastrar o usuário!');
+                $request->session()->flash('error','Erro ao tentar cadastrar o usuário!');
                 return redirect('forumlog');
             }
         }
@@ -102,15 +106,15 @@ class User extends Controller
             $user = new UserModel;
             $login = $user
             ->where([
-                ['tagname', '=', $request->input('login')],
+                ['tagname', '=', strtolower($request->input('login'))],
                 ['ban', '=', 0]
                 ])
                 ->first();
                 
             if ($login) {
                 if ($login['password'] === md5($request->input('password'))) {
-                    $request->session()->put('token', md5($request->input('login').'teste123'));
-                    $request->session()->put('user', $request->input('login'));
+                    $request->session()->put('token', md5(strtolower($request->input('login')).'teste123'));
+                    $request->session()->put('user', strtolower($request->input('login')));
                     
                     return redirect('forumlog/user/blog/'.$login['tagname']);
                 } else {
@@ -123,7 +127,7 @@ class User extends Controller
             }
         }
         
-        return redirect('home');
+        return redirect('forumlog');
     }
 
     public function logout(Request $request)
@@ -132,8 +136,68 @@ class User extends Controller
         return redirect('forumlog');
     }
 
-    public function recover()
+    public function recover(Request $request, $token = null)
     {
-        return redirect('home');
+        $data['title'] = 'Recuperar Senha';
+        $data['valid'] = false;
+        
+        $email = $request->input('email');
+        
+        if ($email)
+        {
+            $user = new UserModel;
+    
+            $recoverUser = $user->where('email',$email)->first();
+
+            if ($recoverUser)
+            {
+                $to_name = $recoverUser['name'];
+                $to_address = $email;
+                $from_name = config('app.name');
+                $body = "Recuperação de Senha | ForumLog";
+                $link = url('user/recover').'/'.md5($email.date('Y-m-d'));
+
+                $msgData = ['name' => $to_name, 'body' => $body, 'link' => $link];
+
+                Mail::send('email', $msgData, function($message) use ($request, $to_name, $to_address) {
+                    $message->to($to_address, $to_name)->subject('Recuperação de Senha | ForumLog');
+
+                    $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
+                    
+                    return redirect('forumlog');
+                });
+            } else {
+                $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
+                return redirect('forumlog');
+            }
+        }
+
+        if ($token)
+        {
+            $user = new UserModel;
+
+            $users = $user->get();
+    
+            foreach ($users as $theUser)
+            {
+                if ($token == md5($theUser['email'].date('Y-m-d')))
+                {
+                    $data['valid'] = true;
+                    $data['user'] = $theUser['email'];
+                }
+            }
+        }
+
+        if ($request->input('recover'))
+        {
+            $user = new UserModel;
+            $save = [
+                'password' => $request->input('password')
+            ];
+            
+            $user->where($request->input('email'))->save($save);
+        }
+
+        return view('recover', $data);
     }
 }

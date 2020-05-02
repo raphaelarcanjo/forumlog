@@ -17,13 +17,11 @@
                 <li class="@if ($title == 'Blog') active @endif"><a href="{{url('forumlog/blog')}}">Blog</a></li>
                 <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('forumlog/about')}}">Sobre</a></li>
                 @if (session('user') && session('token'))
-                    @if (session('token') == md5(session('user').'teste123'))
-                        <li class="red accent-2">
-                            <a href="{{url('forumlog/user/logout')}}" class="white-text">
-                                Logout
-                            </a>
-                        </li>
-                    @endif
+                    <li class="red accent-2">
+                        <a href="{{url('forumlog/user/logout')}}" class="white-text">
+                            Logout
+                        </a>
+                    </li>
                 @else
                     <li class="teal">
                         <a href="#modalLogin" class="modal-trigger">
@@ -41,13 +39,11 @@
         <li class="@if ($title == 'Blog') active @endif"><a href="{{url('forumlog/blog')}}">Blog</a></li>
         <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('forumlog/about')}}">Sobre</a></li>
         @if (session('user') && session('token'))
-            @if (session('token') == md5(session('user').'teste123'))
-                <li class="red accent-2">
-                    <a href="{{url('forumlog/user/logout')}}" class="white-text">
-                        Logout
-                    </a>
-                </li>
-            @endif
+            <li class="red accent-2">
+                <a href="{{url('forumlog/user/logout')}}" class="white-text">
+                    Logout
+                </a>
+            </li>
         @else
             <li>
                 <a href="#!" class="dropdown-trigger" data-target="dropdownLogin">
