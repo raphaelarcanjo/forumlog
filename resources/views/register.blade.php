@@ -84,7 +84,7 @@
                 <span class="helper-text" data-error="A senha deve conter no mínimo 8 caracteres" data-success="Para sua segurança, use uma senha complexa">Digite uma senha segura</span>
             </div>
             <div class="input-field col s12 m6">
-                <input type="password" id="confirm" name="confirm" class="validate" onfocusout="confirmPass()" required />
+                <input type="password" id="confirm" name="password_confirmation" class="validate" onfocusout="confirmPass()" required />
                 <label for="confirm">Confirmar senha</label>
                 <span id="confirmHelper" class="helper-text" data-error="As senhas não conferem" data-success="Senhas conferem">Confirme a sua senha</span>
             </div>

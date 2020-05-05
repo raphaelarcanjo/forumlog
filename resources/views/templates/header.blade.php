@@ -105,5 +105,13 @@
 </header>
 
 <div class="container">
+    @if (session('success'))
+        <p class="card-panel green green-text lighten-4">{{session('success')}}</p>
+    @endif
+    
+    @if (session('error'))
+        <p class="card-panel red red-text lighten-4">{{session('error')}}</p>
+    @endif
+    
     <main>
         @yield('content')

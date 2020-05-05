@@ -17,7 +17,7 @@ Route::prefix('forumlog')->group(function () {
     Route::get('', 'Home@index');
     Route::get('about', 'Home@about');
     Route::get('forum', 'Home@forum');
-    Route::get('blog', 'Home@blog');
+    Route::get('blog/{tagname?}', 'Home@blog');
     Route::post('contact', 'Home@contact');
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\UserModel;
@@ -59,8 +60,7 @@ class User extends Controller
                 'state'     => 'required|max:80',
                 'country'   => 'required|max:60',
                 'birth'     => 'required|date',
-                'password'  => 'required|min:8',
-                'confirm'   => ($request->input('password') != $request->input('confirm')) ? 'max:1' : ''
+                'password'  => 'required|confirmed|min:8',
             ]);
             
             $user = new UserModel();
@@ -151,19 +151,15 @@ class User extends Controller
 
             if ($recoverUser)
             {
-                $to_name = $recoverUser['name'];
-                $to_address = $email;
-                $from_name = config('app.name');
-                $body = "Recuperação de Senha | ForumLog";
-                $link = url('forumlog/user/recover').'/'.md5($email.date('Y-m-d'));
+                $data['name'] = $recoverUser['name'];
+                $data['to_address'] = $email;
+                $data['from_name'] = config('app.name');
+                $data['body'] = "Recuperação de Senha | ForumLog";
+                $data['link'] = url('forumlog/user/recover').'/'.md5($email.date('Y-m-d'));
 
-                $msgData = ['name' => $to_name, 'body' => $body, 'link' => $link];
+                Mail::send(new RecoverPass($data));
 
-                Mail::send('email', $msgData, function($message) use ($request, $to_name, $to_address) {
-                    $message->to($to_address, $to_name)->subject('Recuperação de Senha | ForumLog');
-
-                    $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
-                });
+                $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
             } else {
                 $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
             }
@@ -189,6 +185,10 @@ class User extends Controller
 
         if ($request->input('recover'))
         {
+            $valid = $request->validate([
+                'password' => 'required|confirmed|min:8'
+            ]);
+
             if ($request->input('password') === $request->input('confirm'))
             {
                 $user = new UserModel;

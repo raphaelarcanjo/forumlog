@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Contact;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 class Home extends Controller
@@ -21,7 +23,7 @@ class Home extends Controller
         return view('forum.home', ['title' => 'Forum']);
     }
 
-    public function blog()
+    public function blog($tagname = null)
     {
         if (session('user') && session('token'))
         {
@@ -30,12 +32,28 @@ class Home extends Controller
                 return redirect('forumlog/user/blog/'.session('user'));
             }
         }
+
+        if ($tagname) return redirect('/forumlog/user/blog/'.$tagname);
         
         return view('blog.home', ['title' => 'Blog']);
     }
 
-    public function contact()
+    public function contact(Request $request)
     {
-        return view('home', ['title' => 'Home']);
+        $valid = $request->validate([
+            'name'      => 'required|max:80',
+            'email'     => 'required|max:80',
+            'subject'   => 'required|max:40',
+            'message'   => 'required'
+        ]);
+
+        $data['name'] = $request->input('name').' - '.$request->input('email');
+        $data['subject'] = $request->input('subject');
+        $data['message'] = $request->input('message');
+
+        Mail::send(new Contact($data));
+
+        $request->session()->flash('success','Mensagem enviada com sucesso. Agradecemos pelo seu contato!');
+        return redirect('forumlog');
     }
 }

@@ -2,7 +2,7 @@
 @section('title',$title)
 
 @section('content')
-    @if (isset($name))
+    @if ($name)
         <h3>Blog de {{$name}}</h3>
     @else
         <h3>Blog não encontrado!</h3>

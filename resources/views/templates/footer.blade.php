@@ -26,6 +26,7 @@
         <div class="col s12 m8">
             <h4>CONTATO</h4>
             <form action="{{url('forumlog/contact')}}" method="post">
+                @csrf
                 <div class="input-field">
                     <input type="text" id="name" name="name" class="validate" required />
                     <label for="name" class="grey-text text-lighten-1">Nome completo</label>
