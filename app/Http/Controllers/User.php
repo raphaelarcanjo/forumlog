@@ -68,7 +68,7 @@ class User extends Controller
             $user->name       = $request->input('name');
             $user->email      = strtolower($request->input('email'));
             $user->tagname    = strtolower($request->input('tagname'));
-            $user->phone      = json_encode($request->input('phone'));
+            $user->phones      = json_encode($request->input('phones'));
             $user->cep        = (string)$request->input('cep');
             $user->address    = $request->input('address');
             $user->complement = $request->input('complement');
