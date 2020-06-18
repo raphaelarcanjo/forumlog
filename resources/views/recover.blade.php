@@ -2,7 +2,7 @@
 @section('title',$title)
 
 @section('content')
-    <h3>Criar nova senha</h3>
+    <h4>Criar nova senha</h4>
 
     @if ($valid)
         <form action="{{url('forumlog/user/recover')}}" method="post">

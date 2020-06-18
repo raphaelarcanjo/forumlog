@@ -2,5 +2,5 @@
 @section('title',$title)
 
 @section('content')
-    <h3>Perfil do usuário</h3>
+    <h4>Perfil do usuário</h4>
 @endsection

@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('forumlog')->group(function () {
-    Route::get('', 'Home@index');
-    Route::get('about', 'Home@about');
-    Route::get('forum', 'Home@forum');
-    Route::get('blog/{tagname?}', 'Home@blog');
-    Route::post('contact', 'Home@contact');
+    Route::get('', 'HomeController@index');
+    Route::get('about', 'AboutController@index');
+    Route::get('forum', 'ForumController@index');
+    Route::get('blog/{tagname?}', 'BlogController@index');
+    Route::post('contact', 'ContactController@index');
 });
 
 Route::prefix('forumlog/user')->group(function () {
-    Route::match(['get','post'],'register', 'User@register');
-    Route::post('login', 'User@login');
-    Route::match(['get', 'post'], 'recover/{token?}', 'User@recover');
-    Route::get('blog/{tagname?}', 'User@blog');
-    Route::get('logout', 'User@logout');
+    Route::match(['get','post'],'register', 'UserController@register');
+    Route::post('login', 'UserController@login');
+    Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover');
+    Route::get('blog/{tagname?}', 'BlogController@blog');
+    Route::get('logout', 'UserController@logout');
 });

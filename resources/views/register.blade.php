@@ -2,7 +2,7 @@
 @section('title',$title)
 
 @section('content')
-    <h3>Cadastro</h3>
+    <h4>Cadastro</h4>
 
     <form action="{{url('forumlog/user/register')}}" method="post">
         @csrf

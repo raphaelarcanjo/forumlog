@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\UserModel;
+use App\User;
 
 
-class User extends Controller
+class UserController extends Controller
 {
     public function profile(int $id)
     {
@@ -18,28 +18,6 @@ class User extends Controller
     public function forum()
     {
         return view('forum.home', ['title' => 'Forum']);
-    }
-
-    public function blog(Request $request, $tagname = null)
-    {
-        $data['title'] = 'Blog';
-            
-        if ($tagname) {
-            $user = new UserModel();
-            $perfil = $user
-                ->where([
-                    ['tagname', '=', $tagname],
-                    ['ban', '=', 0]
-                    ])
-                ->first();
-
-            if (!empty($perfil))
-            {
-                $data['name'] = explode(' ',$perfil['name'])[0];
-            }
-        }
-
-        return view('blog.blog', $data);
     }
 
     public function register(Request $request)
@@ -63,7 +41,7 @@ class User extends Controller
                 'password'  => 'required|confirmed|min:8',
             ]);
             
-            $user = new UserModel();
+            $user = new User();
             
             $user->name       = $request->input('name');
             $user->email      = strtolower($request->input('email'));
@@ -103,7 +81,7 @@ class User extends Controller
                 'password'  => 'required'
             ]);
             
-            $user = new UserModel;
+            $user = new User;
             $login = $user
             ->where([
                 ['tagname', '=', strtolower($request->input('login'))],
@@ -145,7 +123,7 @@ class User extends Controller
         
         if ($email)
         {
-            $user = new UserModel;
+            $user = new User;
     
             $recoverUser = $user->where('email',$email)->first();
 
@@ -169,7 +147,7 @@ class User extends Controller
 
         if ($token)
         {
-            $user = new UserModel;
+            $user = new User;
 
             $users = $user->get();
     
@@ -191,7 +169,7 @@ class User extends Controller
 
             if ($request->input('password') === $request->input('confirm'))
             {
-                $user = new UserModel;
+                $user = new User;
                 $user = $user->where('email',$request->input('user'))->first();
                 $user->password = md5($request->input('password'));
                 $user->save();
