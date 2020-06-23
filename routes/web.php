@@ -13,15 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('forumlog')->group(function () {
-    Route::get('', 'HomeController@index');
-    Route::get('about', 'AboutController@index');
-    Route::get('forum', 'ForumController@index');
-    Route::get('blog/{tagname?}', 'BlogController@index');
-    Route::post('contact', 'ContactController@index');
-});
+Route::get('/', 'HomeController@index');
+Route::get('about', 'AboutController@index');
+Route::get('forum', 'ForumController@index');
+Route::get('blog/{tagname?}', 'BlogController@index');
+Route::post('contact', 'ContactController@index');
 
-Route::prefix('forumlog/user')->group(function () {
+Route::prefix('user')->group(function () {
     Route::match(['get','post'],'register', 'UserController@register');
     Route::post('login', 'UserController@login');
     Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover');

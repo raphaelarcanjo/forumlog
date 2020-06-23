@@ -7,7 +7,7 @@
     <meta name="author" content="Raphael Arcanjo | http://github.com/raphaelarcanjo">
     <meta name="description" content="">
 
-    <link rel="shortcut icon" href="{{url('forumlog/public/favicon.png')}}" type="image/png">
+    <link rel="shortcut icon" href="{{url('public/favicon.png')}}" type="image/png">
 
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">

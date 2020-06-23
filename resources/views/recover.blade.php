@@ -5,7 +5,7 @@
     <h4>Criar nova senha</h4>
 
     @if ($valid)
-        <form action="{{url('forumlog/user/recover')}}" method="post">
+        <form action="{{url('user/recover')}}" method="post">
             @csrf
             <input type="hidden" name="recover" value="recover">
             <input type="hidden" name="user" value="{{$user}}">
@@ -22,11 +22,11 @@
             </div>
             <div class="input-field">
                 <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                <a href="{{url('forumlog/')}}" class="waves-effect waves-light red btn right">Voltar</a>
+                <a href="{{url('')}}" class="waves-effect waves-light red btn right">Voltar</a>
             </div>
         </form>
     @else
-        <form action="{{url('forumlog/user/recover')}}" method="post">
+        <form action="{{url('user/recover')}}" method="post">
             @csrf
             <div class="input-field">
                 <input type="email" id="regemail" name="email" minlength="8" class="validate" required />
@@ -34,7 +34,7 @@
             </div>
             <div class="input-field">
                 <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                <a href="{{url('forumlog/')}}" class="waves-effect waves-light red btn right">Voltar</a>
+                <a href="{{url('')}}" class="waves-effect waves-light red btn right">Voltar</a>
             </div>
         </form>
     @endif

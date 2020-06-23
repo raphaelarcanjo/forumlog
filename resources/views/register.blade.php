@@ -4,7 +4,7 @@
 @section('content')
     <h4>Cadastro</h4>
 
-    <form action="{{url('forumlog/user/register')}}" method="post">
+    <form action="{{url('user/register')}}" method="post">
         @csrf
         <div class="row">
             <div class="input-field col s12 m9">
@@ -94,7 +94,7 @@
                 <button type="submit" class="waves-effect waves-light btn">Enviar</button>
             </div>
             <div class="input-field col right">
-                <a href="{{url('forumlog/')}}" class="waves-effect waves-light red btn">Voltar</a>
+                <a href="{{url('')}}" class="waves-effect waves-light red btn">Voltar</a>
             </div>
         </div>
     </form>

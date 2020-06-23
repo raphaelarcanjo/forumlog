@@ -9,10 +9,10 @@
             <h4>LINKS</h4>
 
             <ul>
-                <li><a href="{{url('forumlog/forum')}}" class="grey-text text-lighten-1">Forum</a></li>
-                <li><a href="{{url('forumlog/blog')}}" class="grey-text text-lighten-1">Blog</a></li>
-                <li><a href="{{url('forumlog/about')}}" class="grey-text text-lighten-1">Sobre</a></li>
-                <li><a href="{{url('forumlog/user/register')}}" class="grey-text text-lighten-1">Cadastre-se</a></li>
+                <li><a href="{{url('forum')}}" class="grey-text text-lighten-1">Forum</a></li>
+                <li><a href="{{url('blog')}}" class="grey-text text-lighten-1">Blog</a></li>
+                <li><a href="{{url('about')}}" class="grey-text text-lighten-1">Sobre</a></li>
+                <li><a href="{{url('user/register')}}" class="grey-text text-lighten-1">Cadastre-se</a></li>
             </ul>
 
             <div class="white red-text center-align col sm6">
@@ -25,7 +25,7 @@
         </div>
         <div class="col s12 m8">
             <h4>CONTATO</h4>
-            <form action="{{url('forumlog/contact')}}" method="post">
+            <form action="{{url('contact')}}" method="post">
                 @csrf
                 <div class="input-field">
                     <input type="text" id="name" name="name" class="validate" required />
