@@ -94,7 +94,7 @@
                 <button type="submit" class="waves-effect waves-light btn">Enviar</button>
             </div>
             <div class="input-field col right">
-                <a href="{{url('')}}" class="waves-effect waves-light red btn">Voltar</a>
+                <a href="{{url('/')}}" class="waves-effect waves-light red btn">Voltar</a>
             </div>
         </div>
     </form>

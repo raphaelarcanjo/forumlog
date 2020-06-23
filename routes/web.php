@@ -23,6 +23,5 @@ Route::prefix('user')->group(function () {
     Route::match(['get','post'],'register', 'UserController@register');
     Route::post('login', 'UserController@login');
     Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover');
-    Route::get('blog/{tagname?}', 'BlogController@blog');
     Route::get('logout', 'UserController@logout');
 });

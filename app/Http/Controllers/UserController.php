@@ -15,11 +15,6 @@ class UserController extends Controller
         return view('profile',['title' => 'Perfil']);
     }
 
-    public function forum()
-    {
-        return view('forum.home', ['title' => 'Forum']);
-    }
-
     public function register(Request $request)
     {
         if (!empty($request->all()))
@@ -59,11 +54,11 @@ class UserController extends Controller
 
             if ($user->save()) {
                 $request->session()->flash('success','Usuário cadastrado com sucesso!');
-                return redirect('forumlog');
+                return redirect('/');
             }
             else {
                 $request->session()->flash('error','Erro ao tentar cadastrar o usuário!');
-                return redirect('forumlog');
+                return redirect('/');
             }
         }
 
@@ -94,24 +89,24 @@ class UserController extends Controller
                     $request->session()->put('token', md5(strtolower($request->input('login')).'teste123'));
                     $request->session()->put('user', strtolower($request->input('login')));
                     
-                    return redirect('forumlog/user/blog/'.$login['tagname']);
+                    return redirect('blog');
                 } else {
                     $request->session()->flash('error', "A senha informada está incorreta!");
-                    return redirect('forumlog');
+                    return redirect('/');
                 }
             } else {
                 $request->session()->flash('error', "Usuário não cadastrado ou banido!");
-                return redirect('forumlog');
+                return redirect('/');
             }
         }
         
-        return redirect('forumlog');
+        return redirect('/');
     }
 
     public function logout(Request $request)
     {
         $request->session()->flush();
-        return redirect('forumlog');
+        return redirect('/');
     }
 
     public function recover(Request $request, $token = null)
@@ -133,7 +128,7 @@ class UserController extends Controller
                 $data['to_address'] = $email;
                 $data['from_name'] = config('app.name');
                 $data['body'] = "Recuperação de Senha | ForumLog";
-                $data['link'] = url('forumlog/user/recover').'/'.md5($email.date('Y-m-d'));
+                $data['link'] = url('user/recover').'/'.md5($email.date('Y-m-d'));
 
                 Mail::send(new RecoverPass($data));
 
@@ -142,7 +137,7 @@ class UserController extends Controller
                 $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
             }
 
-            return redirect('forumlog');
+            return redirect('/');
         }
 
         if ($token)
@@ -179,7 +174,7 @@ class UserController extends Controller
                 $request->session()->flash('error','As senhas não conferem!');
             }
             
-            return redirect('forumlog');
+            return redirect('/');
         }
 
         return view('recover', $data);

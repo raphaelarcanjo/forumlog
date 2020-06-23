@@ -22,7 +22,7 @@
             </div>
             <div class="input-field">
                 <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                <a href="{{url('')}}" class="waves-effect waves-light red btn right">Voltar</a>
+                <a href="{{url('/')}}" class="waves-effect waves-light red btn right">Voltar</a>
             </div>
         </form>
     @else
@@ -34,7 +34,7 @@
             </div>
             <div class="input-field">
                 <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                <a href="{{url('')}}" class="waves-effect waves-light red btn right">Voltar</a>
+                <a href="{{url('/')}}" class="waves-effect waves-light red btn right">Voltar</a>
             </div>
         </form>
     @endif

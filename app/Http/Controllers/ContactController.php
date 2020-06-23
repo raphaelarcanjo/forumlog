@@ -24,6 +24,6 @@ class ContactController extends Controller
         Mail::send(new Contact($data));
 
         $request->session()->flash('success','Mensagem enviada com sucesso. Agradecemos pelo seu contato!');
-        return redirect('forumlog');
+        return redirect('/');
     }
 }

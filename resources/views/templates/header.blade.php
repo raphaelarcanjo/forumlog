@@ -6,13 +6,13 @@
 <header>
     <nav>
         <div class="nav-wrapper">
-            <a href="{{url('')}}" class="brand-logo">
+            <a href="{{url('/')}}" class="brand-logo">
                 <img src="{{asset('img/logo-rgba.png')}}" alt="ForumLog">
             </a>
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 
             <ul id="nav-desktop" class="right hide-on-med-and-down">
-                <li class="@if ($title == 'Home') active @endif"><a href="{{url('')}}">Home</a></li>
+                <li class="@if ($title == 'Home') active @endif"><a href="{{url('/')}}">Home</a></li>
                 <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forum')}}">Forum</a></li>
                 <li class="@if ($title == 'Blog') active @endif"><a href="{{url('blog')}}">Blog</a></li>
                 <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('about')}}">Sobre</a></li>
@@ -34,7 +34,7 @@
     </nav>
     
     <ul id="nav-mobile" class="sidenav">
-        <li class="@if ($title == 'Home') active @endif"><a href="{{url('')}}">Home</a></li>
+        <li class="@if ($title == 'Home') active @endif"><a href="{{url('/')}}">Home</a></li>
         <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forum')}}">Forum</a></li>
         <li class="@if ($title == 'Blog') active @endif"><a href="{{url('blog')}}">Blog</a></li>
         <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('about')}}">Sobre</a></li>
