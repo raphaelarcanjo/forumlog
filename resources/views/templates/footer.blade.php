@@ -20,7 +20,6 @@
                 
                 <img src="https://materializecss.com/res/materialize.svg" alt="" /><h5>Materialize</h5>
                 <img src="https://laravel.com/img/logomark.min.svg" alt="" /><h5>Laravel</h5>
-                <img src="https://vuejs.org/images/logo.png" alt="" /><h5>VueJS</h5>
             </div>
         </div>
         <div class="col s12 m8">
@@ -58,16 +57,13 @@
 </footer>
 </div>
 
-<!-- Polyfill script -->
-<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=es2015"></script>
+<script src="https://unpkg.com/jquery"></script>
 
-<!-- VueJS -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-<!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="{{asset('js/script.js')}}"></script>
+<script src="{{asset('js/script.js?v=1.0')}}"></script>
 
 </body>
 

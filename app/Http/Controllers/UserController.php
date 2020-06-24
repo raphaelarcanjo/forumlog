@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\MessageBag;
 use App\User;
 
 
@@ -25,14 +26,14 @@ class UserController extends Controller
                 'name'      => 'required|max:80',
                 'email'     => 'required|unique:users|max:80',
                 'tagname'   => 'required|unique:users|max:24',
-                'cep'       => 'required|max:8',
+                'cep'       => 'required|max:9',
                 'address'   => 'required|max:80',
                 'complement'=> 'max:60',
                 'suburb'    => 'required|max:80',
                 'city'      => 'required|max:80',
                 'state'     => 'required|max:80',
                 'country'   => 'required|max:60',
-                'birth'     => 'required|date',
+                'birth'     => 'required',
                 'password'  => 'required|confirmed|min:8',
             ]);
             
@@ -54,11 +55,10 @@ class UserController extends Controller
 
             if ($user->save()) {
                 $request->session()->flash('success','Usuário cadastrado com sucesso!');
-                return redirect('/');
+                return view('home', ['title' => 'Home']);
             }
             else {
                 $request->session()->flash('error','Erro ao tentar cadastrar o usuário!');
-                return redirect('/');
             }
         }
 

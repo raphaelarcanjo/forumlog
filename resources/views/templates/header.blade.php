@@ -1,8 +1,6 @@
 @include('templates.head')
 <body>
 
-<div id="app">
-
 <header>
     <nav>
         <div class="nav-wrapper">
@@ -111,6 +109,16 @@
     
     @if (session('error'))
         <p class="card-panel red red-text lighten-4">{{session('error')}}</p>
+    @endif
+
+    @if ($errors->any())
+        <div class="card-panel red red-text lighten-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
     
     <main>
