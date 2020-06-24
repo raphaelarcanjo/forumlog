@@ -17,6 +17,7 @@ Route::get('/', 'HomeController@index');
 Route::get('about', 'AboutController@index');
 Route::get('forum', 'ForumController@index');
 Route::get('blog/{tagname?}', 'BlogController@index');
+Route::match(['get','post'],'post/create', 'BlogController@createpost');
 Route::post('contact', 'ContactController@index');
 
 Route::prefix('user')->group(function () {
