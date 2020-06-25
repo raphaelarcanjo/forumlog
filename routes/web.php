@@ -17,8 +17,15 @@ Route::get('/', 'HomeController@index');
 Route::get('about', 'AboutController@index');
 Route::get('forum', 'ForumController@index');
 Route::get('blog/{tagname?}', 'BlogController@index');
-Route::match(['get','post'],'post/create', 'BlogController@createpost');
 Route::post('contact', 'ContactController@index');
+
+Route::prefix('post')->group(function() {
+    Route::match(['get','post'],'create', 'BlogController@createpost');
+    Route::get('private/{id}', 'BlogController@privatepost');
+    Route::get('delete/{id}', 'BlogController@deletepost');
+    Route::post('comment', 'BlogController@createcomment');
+    Route::get('deletecomment/{id}', 'BlogController@deletecomment');
+});
 
 Route::prefix('user')->group(function () {
     Route::match(['get','post'],'register', 'UserController@register');

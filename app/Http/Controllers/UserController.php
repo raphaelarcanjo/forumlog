@@ -92,15 +92,13 @@ class UserController extends Controller
                     return redirect('blog');
                 } else {
                     $request->session()->flash('error', "A senha informada está incorreta!");
-                    return redirect('/');
                 }
             } else {
                 $request->session()->flash('error', "Usuário não cadastrado ou banido!");
-                return redirect('/');
             }
         }
         
-        return redirect('/');
+        return view('home', ['title' => 'Home']);
     }
 
     public function logout(Request $request)
@@ -162,19 +160,18 @@ class UserController extends Controller
                 'password' => 'required|confirmed|min:8'
             ]);
 
-            if ($request->input('password') === $request->input('confirm'))
+            $user = new User;
+            $user = $user->where('email',$request->input('user'))->first();
+            $user->password = md5($request->input('password'));
+            
+            if ($user->save())
             {
-                $user = new User;
-                $user = $user->where('email',$request->input('user'))->first();
-                $user->password = md5($request->input('password'));
-                $user->save();
-    
                 $request->session()->flash('success','Senha alterada com sucesso!');
             } else {
                 $request->session()->flash('error','As senhas não conferem!');
             }
             
-            return redirect('/');
+            return view('home', ['title' => 'Home']);
         }
 
         return view('recover', $data);
