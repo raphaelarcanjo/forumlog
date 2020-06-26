@@ -55,7 +55,7 @@ class UserController extends Controller
 
             if ($user->save()) {
                 $request->session()->flash('success','Usuário cadastrado com sucesso!');
-                return view('home', ['title' => 'Home']);
+                return redirect('/');
             }
             else {
                 $request->session()->flash('error','Erro ao tentar cadastrar o usuário!');
@@ -89,7 +89,7 @@ class UserController extends Controller
                     $request->session()->put('token', md5(strtolower($request->input('login')).'teste123'));
                     $request->session()->put('user', strtolower($request->input('login')));
                     
-                    return redirect('blog');
+                    return redirect('/');
                 } else {
                     $request->session()->flash('error', "A senha informada está incorreta!");
                 }
@@ -98,7 +98,7 @@ class UserController extends Controller
             }
         }
         
-        return view('home', ['title' => 'Home']);
+        return redirect('/');
     }
 
     public function logout(Request $request)
@@ -171,7 +171,7 @@ class UserController extends Controller
                 $request->session()->flash('error','As senhas não conferem!');
             }
             
-            return view('home', ['title' => 'Home']);
+            return redirect('/');
         }
 
         return view('recover', $data);

@@ -28,7 +28,7 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">
-                        <a href="{{url('blog/'.$post->created_by)}}">{{$fullname}}</a>
+                        <a href="{{url('blog/'.$post->created_by)}}">{{$post->created_by}}</a>
                     </span>
                     <p>{{$post->message}}</p>
                 </div>
@@ -42,32 +42,37 @@
                 @endif
 
                 @if (!$post->private)
-                    <form action="{{url('post/comment')}}" method="post">
-                        @csrf
-                        <div class="card-content">
-                            <p class="card-title">Comentários</p>
-                            @if ($comments[$post->id])
-                                @foreach ($comments[$post->id] as $the)
-                                    <p>
-                                        <a href="{{url('blog/'.$the->comment_by)}}">{{$the->comment_by}}:</a>
-                                        {{$the->comment}}
-                                        @if ($the->comment_by === session('user'))
-                                            <a href="{{url('post/deletecomment/'.$the->id)}}" class="btn-flat waves-effect waves-red"><i class="material-icons">delete</i></a>
-                                        @endif
-                                    </p>
-                                @endforeach
-                            @endif
-                            <textarea name="comment" class="materialize-textarea"></textarea>
-                        </div>
-                        @if (session('user') && session('token'))
-                            <input type="hidden" name="post_id" value="{{$post->id}}">
-                            <input type="hidden" name="comment_by" value="{{session('user')}}">
-                            <div class="card-action">
-                                <button type="reset" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete_sweep</i>Limpar</button>
-                                <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Enviar</button>
+                    <details>
+                        <summary title="Comentários">
+                            <i class="material-icons right">message</i>
+                        </summary>
+                        <form action="{{url('post/comment')}}" method="post">
+                            @csrf
+                            <div class="card-content">
+                                <p class="card-title">Comentários</p>
+                                @if ($comments[$post->id])
+                                    @foreach ($comments[$post->id] as $the)
+                                        <p>
+                                            <a href="{{url('blog/'.$the->comment_by)}}">{{$the->comment_by}}:</a>
+                                            {{$the->comment}}
+                                            @if ($the->comment_by === session('user'))
+                                                <a href="{{url('post/deletecomment/'.$the->id)}}" class="btn-flat waves-effect waves-red"><i class="material-icons">delete</i></a>
+                                            @endif
+                                        </p>
+                                    @endforeach
+                                @endif
+                                <textarea name="comment" class="materialize-textarea"></textarea>
                             </div>
-                        @endif
-                    </form>
+                            @if (session('user') && session('token'))
+                                <input type="hidden" name="post_id" value="{{$post->id}}">
+                                <input type="hidden" name="comment_by" value="{{session('user')}}">
+                                <div class="card-action">
+                                    <button type="reset" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete_sweep</i>Limpar</button>
+                                    <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Enviar</button>
+                                </div>
+                            @endif
+                        </form>
+                    </details>
                 @endif
             </div>
         @endforeach

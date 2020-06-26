@@ -63,7 +63,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="{{asset('js/script.js?v=1.1')}}"></script>
+<script src="{{asset('js/script.js?v=1.2')}}"></script>
 
 </body>
 

@@ -126,26 +126,28 @@ class BlogController extends Controller
     public function privatepost(Request $request, $id)
     {
         if (session('user') && session('token')) {
-            $post = new Blog();
+            if (md5(session('user').'teste123') === session('token')) {
+                $post = new Blog();
+        
+                $state = $post->where('id', '=', $id)->first();
+        
+                if ($state->private == 1) {
+                    $state->private = null;
+                } else {
+                    $state->private = 1;
+                }
     
-            $state = $post->where('id', '=', $id)->first();
+                $comment = new Comments();
+        
+                $comment->where('post', '=', $id)->delete();
     
-            if ($state->private == 1) {
-                $state->private = null;
+                if ($state->update()) {
+                    $request->session()->flash('success','Post atualizado!');
+                }
+        
             } else {
-                $state->private = 1;
+                $request->session()->flash('error','Só é possível executar essa ação logado!');
             }
-
-            $comment = new Comments();
-    
-            $comment->where('post', '=', $id)->delete();
-
-            if ($state->update()) {
-                $request->session()->flash('success','Post atualizado!');
-            }
-    
-        } else {
-            $request->session()->flash('error','Só é possível executar essa ação logado!');
         }
 
         return redirect('blog');
@@ -154,13 +156,15 @@ class BlogController extends Controller
     public function deletepost(Request $request, $id)
     {
         if (session('user') && session('token')) {
-            $post = new Blog();
-    
-            $post->where('id', '=', $id)->delete();
-    
-            $request->session()->flash('success','Post excluído!');
-        } else {
-            $request->session()->flash('error','Só é possível executar essa ação logado!');
+            if (md5(session('user').'teste123') === session('token')) {
+                $post = new Blog();
+        
+                $post->where('id', '=', $id)->delete();
+        
+                $request->session()->flash('success','Post excluído!');
+            } else {
+                $request->session()->flash('error','Só é possível executar essa ação logado!');
+            }
         }
 
         return redirect('blog');
@@ -191,13 +195,16 @@ class BlogController extends Controller
     public function deletecomment(Request $request, $id)
     {
         if (session('user') && session('token')) {
-            $comment = new Comments();
-    
-            $comment->where('id', '=', $id)->delete();
-    
-            $request->session()->flash('success','Comentário excluído!');
-        } else {
-            $request->session()->flash('error','Só é possível executar essa ação logado!');
+            if (md5(session('user').'teste123') === session('token')) {
+
+                $comment = new Comments();
+        
+                $comment->where('id', '=', $id)->delete();
+        
+                $request->session()->flash('success','Comentário excluído!');
+            } else {
+                $request->session()->flash('error','Só é possível executar essa ação logado!');
+            }
         }
 
         return redirect('blog');

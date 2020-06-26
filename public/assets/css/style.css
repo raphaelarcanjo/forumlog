@@ -41,3 +41,9 @@ footer img:hover {
     width: 6rem;
     transition: .5s;
 }
+
+details summary {
+    display: inline-block;
+    cursor: pointer;
+    list-style: none;
+}
