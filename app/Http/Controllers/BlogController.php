@@ -150,7 +150,7 @@ class BlogController extends Controller
             }
         }
 
-        return redirect('blog');
+        return redirect()->back();
     }
 
     public function deletepost(Request $request, $id)
@@ -167,7 +167,7 @@ class BlogController extends Controller
             }
         }
 
-        return redirect('blog');
+        return redirect()->back();
     }
 
     public function createcomment(Request $request)
@@ -207,6 +207,6 @@ class BlogController extends Controller
             }
         }
 
-        return redirect('blog');
+        return redirect()->back();
     }
 }
