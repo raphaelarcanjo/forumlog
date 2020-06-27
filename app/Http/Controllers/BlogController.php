@@ -108,7 +108,7 @@ class BlogController extends Controller
             $post = new Blog();
     
             $post['message']    = $request->input('message');
-            $post['private']    = $request->input('private');
+            $post['private']    = ($request->input('private')) ? 1 : 0;
             $post['created_by'] = session('user');
     
             if ($post->save()) {
@@ -132,7 +132,7 @@ class BlogController extends Controller
                 $state = $post->where('id', '=', $id)->first();
         
                 if ($state->private == 1) {
-                    $state->private = null;
+                    $state->private = 0;
                 } else {
                     $state->private = 1;
                 }

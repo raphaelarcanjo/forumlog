@@ -39,19 +39,20 @@ class UserController extends Controller
             
             $user = new User();
             
-            $user->name       = $request->input('name');
-            $user->email      = strtolower($request->input('email'));
-            $user->tagname    = strtolower($request->input('tagname'));
-            $user->phones      = json_encode($request->input('phones'));
-            $user->cep        = (string)$request->input('cep');
-            $user->address    = $request->input('address');
-            $user->complement = $request->input('complement');
-            $user->suburb     = $request->input('suburb');
-            $user->city       = $request->input('city');
-            $user->state      = $request->input('state');
-            $user->country    = $request->input('country');
-            $user->birth      = $request->input('birth');
-            $user->password   = md5($request->input('password'));
+            $user->name         = $request->input('name');
+            $user->email        = strtolower($request->input('email'));
+            $user->tagname      = strtolower($request->input('tagname'));
+            $user->phones       = json_encode($request->input('phones'));
+            $user->cep          = (string)$request->input('cep');
+            $user->address      = $request->input('address');
+            $user->complement   = $request->input('complement');
+            $user->suburb       = $request->input('suburb');
+            $user->city         = $request->input('city');
+            $user->state        = $request->input('state');
+            $user->country      = $request->input('country');
+            $user->birth        = $request->input('birth');
+            $user->ban          = 0;
+            $user->password     = md5($request->input('password'));
 
             if ($user->save()) {
                 $request->session()->flash('success','Usuário cadastrado com sucesso!');
