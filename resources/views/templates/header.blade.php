@@ -7,6 +7,7 @@
             <a href="{{url('/')}}" class="brand-logo">
                 <img src="{{asset('img/logo-rgba.png')}}" alt="ForumLog">
             </a>
+
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 
             <ul id="nav-desktop" class="right hide-on-med-and-down">
@@ -99,8 +100,28 @@
             <a href="#!" class="modal-close waves-effect waves-light red btn">Cancelar</a>
         </div>
     </div>
+
+    @if (session('user') && session('token'))
+    <nav>
+        <div class="nav-wrapper teal">
+            <form id="searchForm">
+                <div class="input-field">
+                    <i class="material-icons prefix">search</i>
+                    <input id="search" type="text" class="autocomplete" autocomplete="off" />
+                    <label for="search">
+                        Buscar usuário
+                    </label>
+                </div>
+            </form>
+        </div>
+    </nav>
+    @endif
     @yield('header')
 </header>
+
+<div class="fixed-action-btn" id="btnTop" style="display: none">
+    <button type="button" onclick="goToTop()" class="btn-floating btn-large"><i class="material-icons">arrow_upward</i></button>
+</div>
 
 <div class="container">
     @if (session('success'))

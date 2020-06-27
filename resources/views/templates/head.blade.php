@@ -15,7 +15,7 @@
     <!-- Material icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{asset('css/style.css?v=1.1')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css?v=1.2')}}">
 
     <title>ForumLog | @yield('title')</title>
 </head>

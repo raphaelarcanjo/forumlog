@@ -88,6 +88,7 @@ class UserController extends Controller
                 if ($login['password'] === md5($request->input('password'))) {
                     $request->session()->put('token', md5(strtolower($request->input('login')).'teste123'));
                     $request->session()->put('user', strtolower($request->input('login')));
+                    $request->session()->put('allusers', $user->get('tagname', 'photo'));
                     
                     return redirect('/');
                 } else {

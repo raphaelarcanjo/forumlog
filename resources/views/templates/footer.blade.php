@@ -63,7 +63,31 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="{{asset('js/script.js?v=1.2')}}"></script>
+<script src="{{asset('js/script.js?v=1.3')}}"></script>
+
+@if (session('user') && session('token'))
+    <script type="text/javascript">
+        $(document).ready(()=> {
+            $('input.autocomplete').autocomplete({
+                data: {
+                    @foreach (session('allusers') as $user)
+                        "{{$user->tagname}}": "{{asset('img/'.$user->photo)}}",
+                    @endforeach
+                },
+                onAutocomplete: function(tag) {
+                    window.location.href = "{{url('blog')}}/" + tag
+                }
+            })
+
+            $("#search").keydown(function(event){
+                if(event.keyCode == 13) {
+                event.preventDefault()
+                return false
+                }
+            })
+        })
+    </script>
+@endif
 
 </body>
 

@@ -78,3 +78,12 @@ const confirmPass = () => {
         $("#confirm").removeClass("invalid")
     }
 }
+
+const goToTop = ()=> {
+    $('html, body').animate({ scrollTop: 0 }, 'slow')
+}
+
+$(window).scroll(()=> {
+    if ($(window).scrollTop() > 100) $("#btnTop").fadeIn()
+    else $("#btnTop").fadeOut()
+})
