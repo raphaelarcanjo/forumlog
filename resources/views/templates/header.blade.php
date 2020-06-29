@@ -15,19 +15,6 @@
                 <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forum')}}">Forum</a></li>
                 <li class="@if ($title == 'Blog') active @endif"><a href="{{url('blog')}}">Blog</a></li>
                 <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('about')}}">Sobre</a></li>
-                @if (session('user') && session('token'))
-                    <li class="red accent-2">
-                        <a href="{{url('user/logout')}}" class="white-text">
-                            Logout
-                        </a>
-                    </li>
-                @else
-                    <li class="teal">
-                        <a href="#modalLogin" class="modal-trigger">
-                            Login
-                        </a>
-                    </li>
-                @endif
             </ul>
         </div>
     </nav>
@@ -37,82 +24,40 @@
         <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forum')}}">Forum</a></li>
         <li class="@if ($title == 'Blog') active @endif"><a href="{{url('blog')}}">Blog</a></li>
         <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('about')}}">Sobre</a></li>
-        @if (session('user') && session('token'))
-            <li class="red accent-2">
-                <a href="{{url('user/logout')}}" class="white-text">
-                    Logout
-                </a>
-            </li>
-        @else
-            <li>
-                <a href="#!" class="dropdown-trigger" data-target="dropdownLogin">
-                    Login<i class="material-icons right">arrow_drop_down</i>
-                </a>
-            </li>
-        @endif
     </ul>
-
-    <ul id="dropdownLogin" class="dropdown-content">
-        <li>
-            <div class="container">
-                <h4>Login</h4>
-                <form action="{{url('user/login')}}" method="post">
-                    @csrf
-                    <div class="input-field">
-                        <input type="text" id="login" name="login" class="validate" required />
-                        <label for="login">Login</label>
-                    </div>
-                    <div class="input-field">
-                        <input type="password" id="password" name="password" class="validate" required />
-                        <label for="password">Senha</label>
-                    </div>
-                    <div class="input-field">
-                        <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                        <a href="{{url('user/register')}}" class="waves-effect waves-light btn">Cadastre-se</a>
-                    </div>
-                    <a href="{{url('user/recover')}}" class="waves-effect btn-flat">Esqueci a senha</a>
-                </form>
-            </div>
-        </li>
-    </ul>
-
-    <div id="modalLogin" class="modal">
-        <div class="modal-content">
-            <h4>Login</h4>
-            <form action="{{url('user/login')}}" method="post">
-                @csrf
-                <div class="input-field">
-                    <label for="loginM">Login</label>
-                    <input type="text" name="login" id="loginM" class="validate" required />
-                </div>
-                <div class="input-field">
-                    <label for="passwordM">Senha</label>
-                    <input type="password" name="password" id="passwordM" class="validate" required />
-                </div>
-                <div class="input-field">
-                    <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                    <a href="{{url('user/register')}}" class="waves-effect waves-light btn">Cadastre-se</a>
-                </div>
-                <a href="{{url('user/recover')}}" class="waves-effect btn-flat">Esqueci a senha</a>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-light red btn">Cancelar</a>
-        </div>
-    </div>
 
     @if (session('user') && session('token'))
+    <ul id="userMenu" class="dropdown-content">
+        <li>
+            <a href="user/profile/{{session('user')}}">
+                <i class="material-icons small">assignment_ind</i>Perfil
+            </a>
+        </li>
+        <li>
+            <a href="{{url('user/logout')}}" class="red-text">
+                <i class="material-icons small">close</i>Logout
+            </a>
+        </li>
+    </ul>
     <nav>
         <div class="nav-wrapper teal">
-            <form id="searchForm">
-                <div class="input-field">
-                    <i class="material-icons prefix">search</i>
-                    <input id="search" type="text" class="autocomplete" autocomplete="off" />
-                    <label for="search">
-                        Buscar usuário
-                    </label>
-                </div>
-            </form>
+            <ul>
+                <li>
+                    <form id="searchForm">
+                        <div class="input-field">
+                            <i class="material-icons prefix">search</i>
+                            <input id="search" type="text" class="autocomplete" autocomplete="off" />
+                            <label for="search">
+                                Buscar usuário
+                            </label>
+                        </div>
+                    </form>
+                </li>
+                <li class="right">
+                    <a href="#" class="dropdown-trigger" data-target="userMenu">
+                        <i class="material-icons left">account_circle</i>Usuário<i class="material-icons right">arrow_drop_down</i></a>
+                </li>
+            </ul>
         </div>
     </nav>
     @endif

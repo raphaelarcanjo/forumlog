@@ -11,13 +11,15 @@ use App\User;
 
 class UserController extends Controller
 {
-    public function profile(int $id)
+    public function profile(string $tagname)
     {
         return view('profile',['title' => 'Perfil']);
     }
 
     public function register(Request $request)
     {
+        if (session('user') && session('token')) return redirect('/');
+
         if (!empty($request->all()))
         {
             $data = $request->all();
@@ -66,47 +68,6 @@ class UserController extends Controller
         $data['title'] = 'Cadastro';
 
         return view('register',$data);
-    }
-
-    public function login(Request $request)
-    {
-        if (!empty($request->all()))
-        {
-            $valid = $request->validate([
-                'login'     => 'required',
-                'password'  => 'required'
-            ]);
-            
-            $user = new User;
-            $login = $user
-            ->where([
-                ['tagname', '=', strtolower($request->input('login'))],
-                ['ban', '=', 0]
-                ])
-                ->first();
-                
-            if ($login) {
-                if ($login['password'] === md5($request->input('password'))) {
-                    $request->session()->put('token', md5(strtolower($request->input('login')).'teste123'));
-                    $request->session()->put('user', strtolower($request->input('login')));
-                    $request->session()->put('allusers', $user->get('tagname', 'photo'));
-                    
-                    return redirect('/');
-                } else {
-                    $request->session()->flash('error', "A senha informada está incorreta!");
-                }
-            } else {
-                $request->session()->flash('error', "Usuário não cadastrado ou banido!");
-            }
-        }
-        
-        return redirect('/');
-    }
-
-    public function logout(Request $request)
-    {
-        $request->session()->flush();
-        return redirect('/');
     }
 
     public function recover(Request $request, $token = null)
@@ -177,5 +138,53 @@ class UserController extends Controller
         }
 
         return view('recover', $data);
+    }
+
+    public function login(Request $request)
+    {
+        if (!empty($request->all()))
+        {
+            $valid = $request->validate([
+                'login'     => 'required',
+                'password'  => 'required'
+            ]);
+            
+            $user = new User;
+            $login = $user
+            ->where([
+                ['tagname', '=', strtolower($request->input('login'))],
+                ['ban', '=', 0]
+                ])
+                ->first();
+                
+            if ($login) {
+                if ($login['password'] === md5($request->input('password'))) {
+                    session(['token' => md5(strtolower($request->input('login')).'teste123')]);
+                    session(['user' => strtolower($request->input('login'))]);
+                    session(['allusers' => $user->get('tagname', 'photo')]);
+
+                    if ($request->input('logged')) {
+                        setcookie('user', strtolower($request->input('login')), time() + (60*60*24*365), '/');
+                        setcookie('token', md5(strtolower($request->input('login')).'teste123'), time() + (60*60*24*365), '/');
+                    }
+                    
+                    return redirect('/');
+                } else {
+                    $request->session()->flash('error', "A senha informada está incorreta!");
+                }
+            } else {
+                $request->session()->flash('error', "Usuário não cadastrado ou banido!");
+            }
+        }
+        
+        return redirect('/');
+    }
+
+    public function logout(Request $request)
+    {
+        setcookie('user', '', time() - 3600, '/');
+        setcookie('token', '', time() - 3600, '/');
+        $request->session()->flush();
+        return redirect('/');
     }
 }

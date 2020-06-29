@@ -93,7 +93,9 @@ class BlogController extends Controller
             }
         }
 
-        return view('blog.home', $data);
+        $request->session()->flash('error','É necessário estar logado para acessar essa página!');
+
+        return redirect('/');
     }
 
     public function createpost(Request $request)
