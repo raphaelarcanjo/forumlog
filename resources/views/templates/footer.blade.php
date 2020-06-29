@@ -63,7 +63,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="{{asset('js/script.js?v=1.3')}}"></script>
+<script src="{{asset('js/script.js?v=1.5')}}"></script>
 
 @if (session('user') && session('token'))
     <script type="text/javascript">
@@ -71,7 +71,7 @@
             $('input.autocomplete').autocomplete({
                 data: {
                     @foreach (session('allusers') as $user)
-                        "{{$user->tagname}}": "{{asset('img/'.$user->photo)}}",
+                        "{{$user->tagname}}": "{{url('public/users/'.$user->photo)}}",
                     @endforeach
                 },
                 onAutocomplete: function(tag) {

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,6 @@ Route::prefix('user')->group(function () {
     Route::match(['get','post'],'register', 'UserController@register');
     Route::post('login', 'UserController@login');
     Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover');
-    Route::get('profile/{tagname?}', 'UserController@profile');
+    Route::match(['get','post'], 'profile/{tagname?}', 'UserController@profile');
     Route::get('logout', 'UserController@logout');
 });

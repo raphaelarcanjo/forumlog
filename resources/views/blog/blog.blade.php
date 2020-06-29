@@ -5,7 +5,7 @@
     <div class="row">
         @if ($name)
             <div class="col s12">
-                <h3>Blog de {{$name}}</h3>
+                <h4>Blog de <span class="teal-text">{{$name}}</span></h4>
             </div>
             <div class="col s12">
                 @if (session('user') && session('token'))

@@ -87,3 +87,9 @@ $(window).scroll(()=> {
     if ($(window).scrollTop() > 100) $("#btnTop").fadeIn()
     else $("#btnTop").fadeOut()
 })
+
+function preview_photo(event) {
+    var reader = new FileReader()
+    reader.onload = ()=> $("#previewPhoto").attr('src', reader.result)
+    reader.readAsDataURL(event.target.files[0])
+}

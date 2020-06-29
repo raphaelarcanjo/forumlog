@@ -5,15 +5,81 @@ namespace App\Http\Controllers;
 use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use App\User;
 
 
 class UserController extends Controller
 {
-    public function profile(string $tagname)
+    public function profile(Request $request, string $tagname)
     {
-        return view('profile',['title' => 'Perfil']);
+        if ($tagname != session('user')) {
+            $request->session()->flash('error','Não é possível visualizar ou alterar o perfil de outros usuários!');
+            return redirect('/');
+        }
+
+        $data['title'] = 'Perfil';
+
+        $user = new User();
+
+        $found_user = $user->where('tagname', '=', strtolower($tagname))->first();
+
+        if (!empty($found_user)) {
+            $data['user'] = $found_user;
+        } else {
+            $request->session()->flash('error','Usuário não encontrado!');
+            return redirect('/');
+        }
+
+        if (!empty($request->all())) {
+            $valid = $request->validate([
+                'photo'     => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'name'      => 'max:80',
+                'email'     => 'max:80',
+                'cep'       => 'max:9',
+                'address'   => 'max:80',
+                'complement'=> 'max:60',
+                'suburb'    => 'max:80',
+                'city'      => 'max:80',
+                'state'     => 'max:80',
+                'country'   => 'max:60',
+            ]);
+
+            $found_user->name         = $request->input('name');
+            $found_user->email        = strtolower($request->input('email'));
+            $found_user->tagname      = strtolower($tagname);
+            $found_user->phones       = json_encode($request->input('phones'));
+            $found_user->cep          = (string)$request->input('cep');
+            $found_user->address      = $request->input('address');
+            $found_user->complement   = $request->input('complement');
+            $found_user->suburb       = $request->input('suburb');
+            $found_user->city         = $request->input('city');
+            $found_user->state        = $request->input('state');
+            $found_user->country      = $request->input('country');
+            $found_user->birth        = $request->input('birth');
+
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo');
+                $photo_name = 'photo_'.$tagname.'.'.$photo->getClientOriginalExtension();
+                
+                $destination = public_path('users');
+                
+                $photo->move($destination, $photo_name);
+
+                if (file_exists($destination.'/'.$photo_name)) $found_user->photo = $photo_name;
+                else $request->session()->flash('error','Erro ao fazer upload da imagem!');
+            }
+            
+            if ($found_user->update()) {
+                $request->session()->flash('success','Perfil atualizado com sucesso!');
+            }
+            else {
+                $request->session()->flash('error','Erro ao tentar atualizar o seu cadastro!');
+            }
+        }
+
+        return view('profile', $data);
     }
 
     public function register(Request $request)
@@ -26,7 +92,7 @@ class UserController extends Controller
 
             $valid = $request->validate([
                 'name'      => 'required|max:80',
-                'email'     => 'required|unique:users|max:80',
+                'email'     => 'required|max:80',
                 'tagname'   => 'required|unique:users|max:24',
                 'cep'       => 'required|max:9',
                 'address'   => 'required|max:80',
@@ -161,7 +227,7 @@ class UserController extends Controller
                 if ($login['password'] === md5($request->input('password'))) {
                     session(['token' => md5(strtolower($request->input('login')).'teste123')]);
                     session(['user' => strtolower($request->input('login'))]);
-                    session(['allusers' => $user->get('tagname', 'photo')]);
+                    session(['allusers' => $user->get()]);
 
                     if ($request->input('logged')) {
                         setcookie('user', strtolower($request->input('login')), time() + (60*60*24*365), '/');

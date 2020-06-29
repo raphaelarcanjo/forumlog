@@ -29,7 +29,7 @@
     @if (session('user') && session('token'))
     <ul id="userMenu" class="dropdown-content">
         <li>
-            <a href="user/profile/{{session('user')}}">
+            <a href="{{url('user/profile/'.session('user'))}}">
                 <i class="material-icons small">assignment_ind</i>Perfil
             </a>
         </li>
