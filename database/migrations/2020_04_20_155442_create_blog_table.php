@@ -18,8 +18,8 @@ class CreateBlogTable extends Migration
 			$table->text('message');
 			$table->boolean('private')->default(false);
             $table->string('created_by');
-            $table->rememberToken();
             $table->timestamps();
+            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 

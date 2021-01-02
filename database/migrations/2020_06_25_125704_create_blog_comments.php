@@ -19,6 +19,8 @@ class CreateBlogComments extends Migration
             $table->string('comment');
             $table->integer('post');
             $table->timestamps();
+            $table->foreign('comment_by')->references('id')->on('users');
+            $table->foreign('comment')->references('id')->on('blog');
         });
     }
 

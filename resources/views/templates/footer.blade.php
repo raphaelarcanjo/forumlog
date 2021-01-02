@@ -3,7 +3,7 @@
 
 <footer class="page-footer">
     @yield('footer')
-    
+
     <div class="row">
         <div class="col s12 m4">
             <h4>LINKS</h4>
@@ -14,13 +14,6 @@
                 <li><a href="{{url('about')}}" class="grey-text text-lighten-1">Sobre</a></li>
                 <li><a href="{{url('user/register')}}" class="grey-text text-lighten-1">Cadastre-se</a></li>
             </ul>
-
-            <div class="white red-text center-align col sm6">
-                <h4>POWERED BY</h4>
-                
-                <img src="https://materializecss.com/res/materialize.svg" alt="" /><h5>Materialize</h5>
-                <img src="https://laravel.com/img/logomark.min.svg" alt="" /><h5>Laravel</h5>
-            </div>
         </div>
         <div class="col s12 m8">
             <h4>CONTATO</h4>
@@ -65,14 +58,12 @@
 
 <script src="{{asset('js/script.js?v=1.5')}}"></script>
 
-@if (session('user') && session('token'))
+@if (Auth::check())
     <script type="text/javascript">
         $(document).ready(()=> {
             $('input.autocomplete').autocomplete({
                 data: {
-                    @foreach (session('allusers') as $user)
-                        "{{$user->tagname}}": "{{url('public/users/'.$user->photo)}}",
-                    @endforeach
+                    "{{Auth::user()->tagname}}": "{{url('public/users/'.Auth::user()->photo)}}",
                 },
                 onAutocomplete: function(tag) {
                     window.location.href = "{{url('blog')}}/" + tag

@@ -19,8 +19,8 @@ class CreateForumTable extends Migration
 			$table->json('users')->nullable();
 			$table->boolean('private')->default(false);
             $table->integer('created_by');
-            $table->rememberToken();
             $table->timestamps();
+            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 

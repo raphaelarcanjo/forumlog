@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Blog;
 use App\Comments;
@@ -13,106 +14,62 @@ class BlogController extends Controller
     {
         $data['title'] = 'Blog';
         $data['name'] = null;
+        $perfil = null;
 
-        // BY TAGNAME
+        if (Auth::check()) $perfil = Auth::user();
+        else {
+            $request->session()->flash('error','É necessário estar logado para acessar essa página!');
+            return redirect()->route('home');
+        }
+
         if ($tagname) {
-            $user = new User();
-            $perfil = $user
-                ->where([
+            $perfil = User::where([
                     ['tagname', '=', $tagname],
                     ['ban', '=', 0]
                     ])
                 ->first();
-
-            if (!empty($perfil))
-            {
-                $posts = new Blog();
-                $data['posts'] = $posts
-                    ->where('created_by', '=', $tagname)
-                    ->orderBy('id', 'desc')
-                    ->get();
-
-                $comments = array();
-                
-                foreach ($data['posts'] as $post) {
-                    $comment = new Comments();
-
-                    $post_comments = $comment
-                        ->where('post', '=',  $post->id)
-                        ->get();
-                    
-                    $comments[$post->id] = $post_comments;
-                }
-
-                $data['comments']   = $comments;
-                $data['fullname']   = $perfil['name'];
-                $data['tagname']    = $perfil['tagname'];
-                $data['name']       = explode(' ',$perfil['name'])[0];
-            }
-
-            return view('blog.blog', $data);
         }
 
-        // BY SESSION IF LOGGED
-        if (session('user') && session('token'))
+        if ($perfil)
         {
-            if (session('token') == md5(session('user').'teste123'))
-            {
-                $user = new User();
-                $perfil = $user
-                    ->where([
-                        ['tagname', '=', session('user')],
-                        ['ban', '=', 0]
-                        ])
-                    ->first();
-                    
-                $posts = new Blog();
-                $data['posts'] = $posts
-                ->where('created_by', '=', session('user'))
-                ->orderBy('id', 'desc')
+            $posts = Blog::selectRaw('count(blog_comments.id) as comments_count, blog.*')
+                ->leftJoin('blog_comments','blog_comments.post','=','blog.id')
+                ->where('blog.created_by', '=', $perfil->id)
+                ->orderBy('blog.id', 'desc')
+                ->groupBy('blog.id')
                 ->get();
-                
-                $comments = array();
 
-                foreach ($data['posts'] as $post) {
-                    $comment = new Comments();
-                    
-                    $post_comments = $comment
-                    ->where('post', '=',  $post->id)
+            foreach ($posts as &$post) {
+                $post->comments = Comments::where('post', '=', $post->id)
+                    ->orderBy('updated_at')
                     ->get();
-                    
-                    $comments[$post->id] = $post_comments;
-                }
-                
-                $data['comments']   = $comments;
-                $data['fullname']   = $perfil['name'];
-                $data['tagname']    = $perfil['tagname'];
-                $data['name']       = explode(' ',$perfil['name'])[0];
-
-                return view('blog.blog', $data);
             }
+
+            $data['posts']      = $posts;
+            $data['fullname']   = $perfil['name'];
+            $data['tagname']    = $perfil['tagname'];
+            $data['name']       = explode(' ',$perfil['name'])[0];
         }
+        else $request->session()->flash('error', 'Usuário não encontrado.');
 
-        $request->session()->flash('error','É necessário estar logado para acessar essa página!');
-
-        return redirect('/');
+        return view('blog.blog', $data);
     }
 
     public function createpost(Request $request)
     {
         $data['title'] = 'Blog';
 
-        if (!empty($request->all())) {
+        if (!empty($request->only('message','private'))) {
             $valid = $request->validate([
                 'message' => 'required|max:150'
             ]);
-    
+
             $post = new Blog();
-    
+
             $post['message']    = $request->input('message');
-            $post['private']    = ($request->input('private')) ? 1 : 0;
-            $post['created_by'] = session('user');
-    
+            $post['private']    = (bool) $request->input('private');
+            $post['created_by'] = Auth::id();
+
             if ($post->save()) {
                 $request->session()->flash('success','Post criado!');
                 return redirect('blog/'.session('user'));
@@ -127,28 +84,21 @@ class BlogController extends Controller
 
     public function privatepost(Request $request, $id)
     {
-        if (session('user') && session('token')) {
-            if (md5(session('user').'teste123') === session('token')) {
-                $post = new Blog();
-        
-                $state = $post->where('id', '=', $id)->first();
-        
-                if ($state->private == 1) {
-                    $state->private = 0;
-                } else {
-                    $state->private = 1;
-                }
-    
-                $comment = new Comments();
-        
-                $comment->where('post', '=', $id)->delete();
-    
-                if ($state->update()) {
-                    $request->session()->flash('success','Post atualizado!');
-                }
-        
+        if (Auth::check()) {
+            $state = Blog::where('id', '=', $id)->first();
+
+            if ($state->private == 1) {
+                $state->private = 0;
             } else {
-                $request->session()->flash('error','Só é possível executar essa ação logado!');
+                $state->private = 1;
+            }
+
+            $comment = new Comments();
+
+            $comment->where('post', '=', $id)->delete();
+
+            if ($state->update()) {
+                $request->session()->flash('success','Post atualizado!');
             }
         }
 
@@ -157,16 +107,9 @@ class BlogController extends Controller
 
     public function deletepost(Request $request, $id)
     {
-        if (session('user') && session('token')) {
-            if (md5(session('user').'teste123') === session('token')) {
-                $post = new Blog();
-        
-                $post->where('id', '=', $id)->delete();
-        
-                $request->session()->flash('success','Post excluído!');
-            } else {
-                $request->session()->flash('error','Só é possível executar essa ação logado!');
-            }
+        if (Auth::check()) {
+            Blog::where('id', '=', $id)->delete();
+            $request->session()->flash('success','Post excluído!');
         }
 
         return redirect()->back();
@@ -174,39 +117,27 @@ class BlogController extends Controller
 
     public function createcomment(Request $request)
     {
-        $valid = $request->validate([
-            'comment' => 'required|max:150',
-        ]);
+        if (Auth::check()) {
+            $valid = $request->validate([
+                'comment' => 'required|max:150',
+            ]);
 
-        $comment = new Comments();
+            $comment = new Comments();
 
-        $comment['comment'] = $request->input('comment');
-        $comment['post'] = $request->input('post_id');
-        $comment['comment_by'] = $request->input('comment_by');
+            $comment['comment'] = $request->input('comment');
+            $comment['post'] = $request->input('post_id');
+            $comment['comment_by'] = Auth::user()->tagname;
+            $comment->save();
+        }
 
-        $comment->save();
-        $blog = new Blog();
-
-        $tagname = $blog
-            ->where('id', '=', $request->input('post_id'))
-            ->first('created_by');
-
-        return redirect('blog/'.$tagname->created_by);
+        return redirect()->back();
     }
 
     public function deletecomment(Request $request, $id)
     {
-        if (session('user') && session('token')) {
-            if (md5(session('user').'teste123') === session('token')) {
-
-                $comment = new Comments();
-        
-                $comment->where('id', '=', $id)->delete();
-        
-                $request->session()->flash('success','Comentário excluído!');
-            } else {
-                $request->session()->flash('error','Só é possível executar essa ação logado!');
-            }
+        if (Auth::check()) {
+            Comments::where('id', '=', $id)->delete();
+            $request->session()->flash('success','Comentário excluído!');
         }
 
         return redirect()->back();

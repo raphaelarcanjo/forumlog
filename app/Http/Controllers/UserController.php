@@ -4,79 +4,70 @@ namespace App\Http\Controllers;
 
 use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\MessageBag;
 use App\User;
 
 
 class UserController extends Controller
 {
-    public function profile(Request $request, string $tagname)
+    public function profile(Request $request, string $id)
     {
-        if ($tagname != session('user')) {
-            $request->session()->flash('error','Não é possível visualizar ou alterar o perfil de outros usuários!');
-            return redirect('/');
-        }
-
+        $data['phones'] = ['','',''];
         $data['title'] = 'Perfil';
+        $data['user'] = Auth::user();
 
-        $user = new User();
-
-        $found_user = $user->where('tagname', '=', strtolower($tagname))->first();
-
-        if (!empty($found_user)) {
-            $data['user'] = $found_user;
-        } else {
-            $request->session()->flash('error','Usuário não encontrado!');
-            return redirect('/');
+        if ($id != Auth::id()) {
+            $request->session()->flash('error','Não é possível visualizar ou alterar o perfil de outros usuários!');
+            return redirect()->back();
         }
 
         if (!empty($request->all())) {
             $valid = $request->validate([
                 'photo'     => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'name'      => 'max:80',
-                'email'     => 'max:80',
-                'cep'       => 'max:9',
-                'address'   => 'max:80',
-                'complement'=> 'max:60',
-                'suburb'    => 'max:80',
-                'city'      => 'max:80',
-                'state'     => 'max:80',
-                'country'   => 'max:60',
+                'name'      => 'required|max:80',
+                'email'     => 'required|email|max:80',
+                'cep'       => 'required|max:9',
+                'address'   => 'required|max:80',
+                'complement'=> 'required|max:60',
+                'suburb'    => 'required|max:80',
+                'city'      => 'required|max:80',
+                'state'     => 'required|max:80',
+                'country'   => 'required|max:60',
             ]);
 
-            $found_user->name         = $request->input('name');
-            $found_user->email        = strtolower($request->input('email'));
-            $found_user->tagname      = strtolower($tagname);
-            $found_user->phones       = json_encode($request->input('phones'));
-            $found_user->cep          = (string)$request->input('cep');
-            $found_user->address      = $request->input('address');
-            $found_user->complement   = $request->input('complement');
-            $found_user->suburb       = $request->input('suburb');
-            $found_user->city         = $request->input('city');
-            $found_user->state        = $request->input('state');
-            $found_user->country      = $request->input('country');
-            $found_user->birth        = $request->input('birth');
+            $user               = new User();
+            $user->idate        = $id;
+            $user->name         = $request->input('name');
+            $user->email        = strtolower($request->input('email'));
+            $user->tagname      = strtolower($tagname);
+            $user->phones       = json_encode($request->input('phones'));
+            $user->cep          = (string)$request->input('cep');
+            $user->address      = $request->input('address');
+            $user->complement   = $request->input('complement');
+            $user->suburb       = $request->input('suburb');
+            $user->city         = $request->input('city');
+            $user->state        = $request->input('state');
+            $user->country      = $request->input('country');
+            $user->birth        = $request->input('birth');
 
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
                 $photo_name = 'photo_'.$tagname.'.'.$photo->getClientOriginalExtension();
-                
+
                 $destination = public_path('users');
-                
+
                 $photo->move($destination, $photo_name);
 
-                if (file_exists($destination.'/'.$photo_name)) $found_user->photo = $photo_name;
+                if (file_exists($destination.'/'.$photo_name)) $user->photo = $photo_name;
                 else $request->session()->flash('error','Erro ao fazer upload da imagem!');
             }
-            
-            if ($found_user->update()) {
-                $request->session()->flash('success','Perfil atualizado com sucesso!');
-            }
-            else {
-                $request->session()->flash('error','Erro ao tentar atualizar o seu cadastro!');
-            }
+
+            if ($user->update()) $request->session()->flash('success','Perfil atualizado com sucesso!');
+            else $request->session()->flash('error','Erro ao tentar atualizar o seu cadastro!');
         }
 
         return view('profile', $data);
@@ -84,7 +75,10 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        if (session('user') && session('token')) return redirect('/');
+        $data['title'] = 'Cadastro';
+        $data['phones'] = ['','',''];
+
+        if (Auth::check()) return redirect()->route('home');
 
         if (!empty($request->all()))
         {
@@ -104,9 +98,9 @@ class UserController extends Controller
                 'birth'     => 'required',
                 'password'  => 'required|confirmed|min:8',
             ]);
-            
+
             $user = new User();
-            
+
             $user->name         = $request->input('name');
             $user->email        = strtolower($request->input('email'));
             $user->tagname      = strtolower($request->input('tagname'));
@@ -120,18 +114,16 @@ class UserController extends Controller
             $user->country      = $request->input('country');
             $user->birth        = $request->input('birth');
             $user->ban          = 0;
-            $user->password     = md5($request->input('password'));
+            $user->password     = Hash::make($request->input('password'));
 
             if ($user->save()) {
                 $request->session()->flash('success','Usuário cadastrado com sucesso!');
-                return redirect('/');
+                return redirect()->route('home');
             }
             else {
                 $request->session()->flash('error','Erro ao tentar cadastrar o usuário!');
             }
         }
-
-        $data['title'] = 'Cadastro';
 
         return view('register',$data);
     }
@@ -140,13 +132,13 @@ class UserController extends Controller
     {
         $data['title'] = 'Recuperar Senha';
         $data['valid'] = false;
-        
+
         $email = $request->input('email');
-        
+
         if ($email)
         {
             $user = new User;
-    
+
             $recoverUser = $user->where('email',$email)->first();
 
             if ($recoverUser)
@@ -164,7 +156,7 @@ class UserController extends Controller
                 $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
             }
 
-            return redirect('/');
+            return redirect()->route('home');
         }
 
         if ($token)
@@ -172,7 +164,7 @@ class UserController extends Controller
             $user = new User;
 
             $users = $user->get();
-    
+
             foreach ($users as $theUser)
             {
                 if ($token == md5($theUser['email'].date('Y-m-d')))
@@ -192,15 +184,15 @@ class UserController extends Controller
             $user = new User;
             $user = $user->where('email',$request->input('user'))->first();
             $user->password = md5($request->input('password'));
-            
+
             if ($user->save())
             {
                 $request->session()->flash('success','Senha alterada com sucesso!');
             } else {
                 $request->session()->flash('error','As senhas não conferem!');
             }
-            
-            return redirect('/');
+
+            return redirect()->route('home');
         }
 
         return view('recover', $data);
@@ -208,49 +200,30 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        if (!empty($request->all()))
+        $credentials = $request->only('email', 'password');
+        $remember = $request->input('remember');
+
+        if ($credentials)
         {
             $valid = $request->validate([
-                'login'     => 'required',
+                'email'     => 'required|email',
                 'password'  => 'required'
             ]);
-            
-            $user = new User;
-            $login = $user
-            ->where([
-                ['tagname', '=', strtolower($request->input('login'))],
-                ['ban', '=', 0]
-                ])
-                ->first();
-                
-            if ($login) {
-                if ($login['password'] === md5($request->input('password'))) {
-                    session(['token' => md5(strtolower($request->input('login')).'teste123')]);
-                    session(['user' => strtolower($request->input('login'))]);
-                    session(['allusers' => $user->get()]);
 
-                    if ($request->input('logged')) {
-                        setcookie('user', strtolower($request->input('login')), time() + (60*60*24*365), '/');
-                        setcookie('token', md5(strtolower($request->input('login')).'teste123'), time() + (60*60*24*365), '/');
-                    }
-                    
-                    return redirect('/');
-                } else {
-                    $request->session()->flash('error', "A senha informada está incorreta!");
-                }
-            } else {
-                $request->session()->flash('error', "Usuário não cadastrado ou banido!");
-            }
+            // dd($credentials);
+            if (Auth::attempt($credentials, $remember)) $request->session()->regenerate();
+            else $request->session()->flash('error', "Usuário ou senha inválido!");
         }
-        
-        return redirect('/');
+
+        return redirect()->route('home');
     }
 
     public function logout(Request $request)
     {
-        setcookie('user', '', time() - 3600, '/');
-        setcookie('token', '', time() - 3600, '/');
-        $request->session()->flush();
-        return redirect('/');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
     }
 }

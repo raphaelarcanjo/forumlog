@@ -18,7 +18,7 @@
             </ul>
         </div>
     </nav>
-    
+
     <ul id="nav-mobile" class="sidenav">
         <li class="@if ($title == 'Home') active @endif"><a href="{{url('/')}}">Home</a></li>
         <li class="@if ($title == 'Forum') active @endif"><a href="{{url('forum')}}">Forum</a></li>
@@ -26,10 +26,10 @@
         <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('about')}}">Sobre</a></li>
     </ul>
 
-    @if (session('user') && session('token'))
+    @if (Auth::check())
     <ul id="userMenu" class="dropdown-content">
         <li>
-            <a href="{{url('user/profile/'.session('user'))}}">
+            <a href="{{url('user/profile/'.Auth::id())}}">
                 <i class="material-icons small">assignment_ind</i>Perfil
             </a>
         </li>
@@ -72,7 +72,7 @@
     @if (session('success'))
         <p class="card-panel green green-text lighten-4">{{session('success')}}</p>
     @endif
-    
+
     @if (session('error'))
         <p class="card-panel red red-text lighten-4">{{session('error')}}</p>
     @endif
@@ -86,6 +86,6 @@
             </ul>
         </div>
     @endif
-    
+
     <main>
         @yield('content')

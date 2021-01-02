@@ -14,15 +14,6 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        if (!session('user') && !session('token')) {
-            if (isset($_COOKIE['user']) && isset($_COOKIE['token'])) {
-                if ($_COOKIE['token'] === md5($_COOKIE['user'].'teste123')) {
-                    session(['token' => md5($_COOKIE['user'].'teste123')]);
-                    session(['user' => $_COOKIE['user']]);
-                    $user = new User();
-                    session(['allusers' => $user->get('tagname', 'photo')]);
-                }
-            }
-        }
+        //
     }
 }

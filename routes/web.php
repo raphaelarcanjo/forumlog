@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/', 'HomeController@index');
-Route::get('about', 'AboutController@index');
-Route::get('forum', 'ForumController@index');
-Route::get('blog/{tagname?}', 'BlogController@index');
-Route::post('contact', 'ContactController@index');
+Route::match(['get','post'], '/', 'HomeController@index')->name('home');
+Route::get('about', 'AboutController@index')->name('about');
+Route::get('forum', 'ForumController@index')->name('forum');
+Route::get('blog/{tagname?}', 'BlogController@index')->name('blog');
+Route::post('contact', 'ContactController@index')->name('contact');
 
 Route::prefix('post')->group(function() {
     Route::match(['get','post'],'create', 'BlogController@createpost');
@@ -30,7 +30,7 @@ Route::prefix('post')->group(function() {
 
 Route::prefix('user')->group(function () {
     Route::match(['get','post'],'register', 'UserController@register');
-    Route::post('login', 'UserController@login');
+    Route::post('login', 'UserController@login')->name('login');
     Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover');
     Route::match(['get','post'], 'profile/{tagname?}', 'UserController@profile');
     Route::get('logout', 'UserController@logout');
