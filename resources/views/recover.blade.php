@@ -21,8 +21,8 @@
                 <span id="confirmHelper" class="helper-text" data-error="As senhas não conferem" data-success="Senhas conferem">Confirme a sua senha</span>
             </div>
             <div class="input-field">
-                <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                <a href="{{url('/')}}" class="waves-effect waves-light red btn right">Voltar</a>
+                <a href="{{url('/')}}" class="waves-effect waves-light red btn">Voltar</a>
+                <button type="submit" class="waves-effect waves-light btn right">Enviar</button>
             </div>
         </form>
     @else
@@ -33,8 +33,8 @@
                 <label for="regemail">E-mail</label>
             </div>
             <div class="input-field">
-                <button type="submit" class="waves-effect waves-light btn">Enviar</button>
-                <a href="{{url('/')}}" class="waves-effect waves-light red btn right">Voltar</a>
+                <a href="{{url('/')}}" class="waves-effect waves-light red btn">Voltar</a>
+                <button type="submit" class="waves-effect waves-light btn right">Enviar</button>
             </div>
         </form>
     @endif

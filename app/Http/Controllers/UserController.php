@@ -183,7 +183,7 @@ class UserController extends Controller
 
             $user = new User;
             $user = $user->where('email',$request->input('user'))->first();
-            $user->password = md5($request->input('password'));
+            $user->password = Hash::make($request->input('password'));
 
             if ($user->save())
             {

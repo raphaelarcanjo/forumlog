@@ -91,10 +91,10 @@
         </div>
         <div class="row">
             <div class="input-field col">
-                <button type="submit" class="waves-effect waves-light btn">Enviar</button>
+                <a href="{{url('/')}}" class="waves-effect waves-light red btn">Voltar</a>
             </div>
             <div class="input-field col right">
-                <a href="{{url('/')}}" class="waves-effect waves-light red btn">Voltar</a>
+                <button type="submit" class="waves-effect waves-light btn">Enviar</button>
             </div>
         </div>
     </form>

@@ -26,41 +26,41 @@
         <li class="@if ($title == 'Sobre') active @endif"><a href="{{url('about')}}">Sobre</a></li>
     </ul>
 
-    @if (Auth::check())
-    <ul id="userMenu" class="dropdown-content">
-        <li>
-            <a href="{{url('user/profile/'.Auth::id())}}">
-                <i class="material-icons small">assignment_ind</i>Perfil
-            </a>
-        </li>
-        <li>
-            <a href="{{url('user/logout')}}" class="red-text">
-                <i class="material-icons small">close</i>Logout
-            </a>
-        </li>
-    </ul>
-    <nav>
-        <div class="nav-wrapper teal">
-            <ul>
-                <li>
-                    <form id="searchForm">
-                        <div class="input-field">
-                            <i class="material-icons prefix">search</i>
-                            <input id="search" type="text" class="autocomplete" autocomplete="off" />
-                            <label for="search">
-                                Buscar usuário
-                            </label>
-                        </div>
-                    </form>
-                </li>
-                <li class="right">
-                    <a href="#" class="dropdown-trigger" data-target="userMenu">
-                        <i class="material-icons left">account_circle</i>Usuário<i class="material-icons right">arrow_drop_down</i></a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    @endif
+    @auth
+        <ul id="userMenu" class="dropdown-content">
+            <li>
+                <a href="{{url('user/profile/'.Auth::id())}}">
+                    <i class="material-icons small">assignment_ind</i>Perfil
+                </a>
+            </li>
+            <li>
+                <a href="{{url('user/logout')}}" class="red-text">
+                    <i class="material-icons small">close</i>Logout
+                </a>
+            </li>
+        </ul>
+        <nav>
+            <div class="nav-wrapper teal">
+                <ul>
+                    <li>
+                        <form id="searchForm">
+                            <div class="input-field">
+                                <i class="material-icons prefix">search</i>
+                                <input id="search" type="text" class="autocomplete" autocomplete="off" />
+                                <label for="search">
+                                    Buscar usuário
+                                </label>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="right">
+                        <a href="#" class="dropdown-trigger" data-target="userMenu">
+                            <i class="material-icons left">account_circle</i>Usuário<i class="material-icons right">arrow_drop_down</i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    @endauth
     @yield('header')
 </header>
 

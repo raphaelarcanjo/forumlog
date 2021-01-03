@@ -58,7 +58,7 @@
 
 <script src="{{asset('js/script.js?v=1.5')}}"></script>
 
-@if (Auth::check())
+@auth
     <script type="text/javascript">
         $(document).ready(()=> {
             $('input.autocomplete').autocomplete({
@@ -78,7 +78,7 @@
             })
         })
     </script>
-@endif
+@endauth
 
 </body>
 

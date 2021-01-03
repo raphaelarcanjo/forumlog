@@ -50,7 +50,10 @@ class BlogController extends Controller
             $data['tagname']    = $perfil['tagname'];
             $data['name']       = explode(' ',$perfil['name'])[0];
         }
-        else $request->session()->flash('error', 'Usuário não encontrado.');
+        else {
+            $request->session()->flash('error', 'Blog não encontrado.');
+            return redirect()->route('home');
+        }
 
         return view('blog.blog', $data);
     }

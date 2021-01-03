@@ -53,13 +53,13 @@
                             @endforeach
                             <textarea name="comment" class="materialize-textarea"></textarea>
                         </div>
-                        @if (Auth::check())
+                        @auth
                             <input type="hidden" name="post_id" value="{{$post->id}}">
                             <div class="card-action">
                                 <button type="reset" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete_sweep</i>Limpar</button>
                                 <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Enviar</button>
                             </div>
-                        @endif
+                        @endauth
                     </form>
                 </details>
             @endif
