@@ -17,10 +17,7 @@ class BlogController extends Controller
         $perfil = null;
 
         if (Auth::check()) $perfil = Auth::user();
-        else {
-            $request->session()->flash('error','É necessário estar logado para acessar essa página!');
-            return redirect()->route('home');
-        }
+        else return view('blog.home', $data);
 
         if ($tagname) {
             $perfil = User::where([
@@ -77,9 +74,7 @@ class BlogController extends Controller
                 $request->session()->flash('success','Post criado!');
                 return redirect('blog/'.session('user'));
             }
-            else {
-                $request->session()->flash('error','Não foi possível criar o post!');
-            }
+            else $request->session()->flash('error','Não foi possível criar o post!');
         }
 
         return view('blog.create', $data);
@@ -87,22 +82,12 @@ class BlogController extends Controller
 
     public function privatepost(Request $request, $id)
     {
-        if (Auth::check()) {
-            $state = Blog::where('id', '=', $id)->first();
+        $state = Blog::where('id', '=', $id)->first();
+        $state->private = ! $state->private;
 
-            if ($state->private == 1) {
-                $state->private = 0;
-            } else {
-                $state->private = 1;
-            }
-
-            $comment = new Comments();
-
-            $comment->where('post', '=', $id)->delete();
-
-            if ($state->update()) {
-                $request->session()->flash('success','Post atualizado!');
-            }
+        if ($state->update()) {
+            Comments::where('post', '=', $id)->delete();
+            $request->session()->flash('success','Post atualizado!');
         }
 
         return redirect()->back();
@@ -110,38 +95,32 @@ class BlogController extends Controller
 
     public function deletepost(Request $request, $id)
     {
-        if (Auth::check()) {
-            Blog::where('id', '=', $id)->delete();
-            $request->session()->flash('success','Post excluído!');
-        }
+        Blog::where('id', '=', $id)->delete();
+        $request->session()->flash('success','Post excluído!');
 
         return redirect()->back();
     }
 
     public function createcomment(Request $request)
     {
-        if (Auth::check()) {
-            $valid = $request->validate([
-                'comment' => 'required|max:150',
-            ]);
+        $valid = $request->validate([
+            'comment' => 'required|max:150',
+        ]);
 
-            $comment = new Comments();
+        $comment = new Comments();
 
-            $comment['comment'] = $request->input('comment');
-            $comment['post'] = $request->input('post_id');
-            $comment['comment_by'] = Auth::user()->tagname;
-            $comment->save();
-        }
+        $comment['comment'] = $request->input('comment');
+        $comment['post'] = $request->input('post_id');
+        $comment['comment_by'] = Auth::user()->tagname;
+        $comment->save();
 
         return redirect()->back();
     }
 
     public function deletecomment(Request $request, $id)
     {
-        if (Auth::check()) {
-            Comments::where('id', '=', $id)->delete();
-            $request->session()->flash('success','Comentário excluído!');
-        }
+        Comments::where('id', '=', $id)->delete();
+        $request->session()->flash('success','Comentário excluído!');
 
         return redirect()->back();
     }

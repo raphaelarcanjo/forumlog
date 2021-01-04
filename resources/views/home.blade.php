@@ -10,12 +10,12 @@
                 </span>
                 <p>{{$post->message}}</p>
             </div>
-            @if (Auth::id() == $post->created_by)
+            @can ('delete-post', $post)
                 <div class="card-action">
                     <a href="{{url('post/delete/'.$post->id)}}" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete</i>Excluir post</a>
                     <a href="{{url('post/private/'.$post->id)}}" class="btn waves-effect waves-light {{($post->private) ? 'red' : 'green'}}"><i class="material-icons left">message</i>{{($post->private) ? 'Não privado' : 'privado'}}</a>
                 </div>
-            @endif
+            @endcan
 
             @if (!$post->private)
                 <details>
@@ -28,9 +28,9 @@
                                 <p>
                                     <a href="{{url('blog/'.$comment->comment_by)}}">{{$comment->comment_by}}:</a>
                                     {{$comment->comment}}
-                                    @if ($comment->comment_by == Auth::user()->tagname)
+                                    @can ('delete-comment', $comment)
                                         <a href="{{url('post/deletecomment/'.$comment->id)}}" class="btn-flat waves-effect waves-red"><i class="material-icons">delete</i></a>
-                                    @endif
+                                    @endcan
                                 </p>
                             @endforeach
                             <textarea name="comment" class="materialize-textarea"></textarea>
