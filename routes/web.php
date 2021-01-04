@@ -31,7 +31,7 @@ Route::prefix('post')->group(function() {
 Route::prefix('user')->group(function () {
     Route::match(['get','post'],'register', 'UserController@register');
     Route::post('login', 'UserController@login')->name('login');
-    Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover');
+    Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover')->name('password.reset');
     Route::match(['get','post'], 'profile/{tagname?}', 'UserController@profile');
     Route::get('logout', 'UserController@logout');
 });

@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\MessageBag;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 use App\User;
 
 
@@ -131,65 +134,42 @@ class UserController extends Controller
     public function recover(Request $request, $token = null)
     {
         $data['title'] = 'Recuperar Senha';
-        $data['valid'] = false;
-
-        $email = $request->input('email');
-
-        if ($email)
-        {
-            $user = new User;
-
-            $recoverUser = $user->where('email',$email)->first();
-
-            if ($recoverUser)
-            {
-                $data['name'] = $recoverUser['name'];
-                $data['to_address'] = $email;
-                $data['from_name'] = config('app.name');
-                $data['body'] = "Recuperação de Senha | ForumLog";
-                $data['link'] = url('user/recover').'/'.md5($email.date('Y-m-d'));
-
-                Mail::send(new RecoverPass($data));
-
-                $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
-            } else {
-                $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
-            }
-
-            return redirect()->route('home');
-        }
 
         if ($token)
         {
-            $user = new User;
+            $data['token'] = $token;
 
-            $users = $user->get();
-
-            foreach ($users as $theUser)
-            {
-                if ($token == md5($theUser['email'].date('Y-m-d')))
-                {
-                    $data['valid'] = true;
-                    $data['user'] = $theUser['email'];
-                }
-            }
+            return view('recover', $data);
         }
 
-        if ($request->input('recover'))
-        {
-            $valid = $request->validate([
-                'password' => 'required|confirmed|min:8'
-            ]);
+        if ($request->input('email')) {
+            if ($request->input('password')) {
 
-            $user = new User;
-            $user = $user->where('email',$request->input('user'))->first();
-            $user->password = Hash::make($request->input('password'));
+                $request->validate([
+                    'token' => 'required',
+                    'email' => 'required|email',
+                    'password' => 'required|min:8|confirmed',
+                ]);
 
-            if ($user->save())
-            {
-                $request->session()->flash('success','Senha alterada com sucesso!');
+                $status = Password::reset(
+                    $request->only('email', 'password', 'password_confirmation', 'token'),
+                    function ($user, $password) use ($request) {
+                        $user->forceFill(['password' => Hash::make($password)])->save();
+                        $user->setRememberToken(Str::random(60));
+
+                        event(new PasswordReset($user));
+                    }
+                );
+
+                if ($status == Password::PASSWORD_RESET) $request->session()->flash('success','Senha alterada com sucesso!');
+                else $request->session()->flash('error','Não foi possível alterar as senhas!');
             } else {
-                $request->session()->flash('error','As senhas não conferem!');
+                $request->validate(['email' => 'required|email']);
+
+                $status = Password::sendResetLink($request->only('email'));
+
+                if ($status == Password::RESET_LINK_SENT) $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
+                else  $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
             }
 
             return redirect()->route('home');
