@@ -70,6 +70,22 @@
                 }
             })
 
+            $('input.autocomplete').keyup(function() {
+                if ($('input.autocomplete').val().length >= 2) {
+                    $.ajax({
+                        type: 'get',
+                        data: {
+                            _token: "{{csrf_token()}}",
+                            tag: $("input.autocomplete").val()
+                        },
+                        url: "{{url('user/getusers')}}",
+                        success: function (data) {
+                            $('input.autocomplete').autocomplete('updateData',JSON.parse(data));
+                        }
+                    })
+                }
+            })
+
             $("#search").keydown(function(event){
                 if(event.keyCode == 13) {
                 event.preventDefault()

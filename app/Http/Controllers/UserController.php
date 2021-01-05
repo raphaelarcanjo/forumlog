@@ -206,4 +206,18 @@ class UserController extends Controller
 
         return redirect()->route('home');
     }
+
+    public function getusers(Request $request)
+    {
+        $tag = $request->input('tag');
+        $users = User::select('tagname','photo')->where('tagname', 'like', $tag.'%')->get();
+
+        $correctarray = [];
+
+        foreach($users as $user) {
+            $correctarray[$user->tagname] = url('public/users/'.$user->photo);
+        }
+
+        return json_encode($correctarray);
+    }
 }
