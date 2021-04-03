@@ -52,9 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', null),
+    'url' => env('APP_URL', ''),
 
-    'asset_url' => env('ASSET_URL', null),
+    'asset_url' => env('ASSET_URL', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC-3',
+    'timezone' => 'America/Sao_paulo',
 
     /*
     |--------------------------------------------------------------------------
