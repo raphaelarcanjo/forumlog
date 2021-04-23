@@ -17,9 +17,9 @@ class CreateBlogTable extends Migration
 			$table->id();
 			$table->text('message');
 			$table->boolean('private')->default(false);
-            $table->string('created_by');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

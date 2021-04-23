@@ -6,7 +6,7 @@ $('.dropdown-trigger').dropdown(dropOptions)
 var maxDate = new Date()
 var dateOptions = {
     format: 'dd/mm/yyyy',
-    yearRange: [1900, maxDate.getFullYear()],
+    yearRange: [1920, maxDate.getFullYear()],
     i18n: {
         months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Júlho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
         monthsShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],

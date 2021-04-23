@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 Route::match(['get','post'], '/', 'HomeController@index')->name('home');
 Route::get('about', 'AboutController@index')->name('about');
 Route::get('forum', 'ForumController@index')->name('forum');
-Route::get('blog/{tagname?}', 'BlogController@index')->name('blog');
+Route::get('blog/{id?}', 'BlogController@index')->name('blog');
 Route::post('contact', 'ContactController@index')->name('contact');
 
 Route::prefix('post')->group(function() {

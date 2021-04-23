@@ -32,15 +32,15 @@
         </div>
         <div class="row">
             <div class="input-field col s12 m4">
-                <input value="{{ $phones[0] ?? old('phones')[0] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
+                <input value="{{ $phones[0] != null?$phones[0]:'' ?? old('phones')[0] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
                 <label for="phone1">Telefone 1</label>
             </div>
             <div class="input-field col s12 m4">
-                <input value="{{ $phones[1] ?? old('phones')[1] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
+                <input value="{{ $phones[1] != null?$phones[1]:'' ?? old('phones')[1] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
                 <label for="phone2">Telefone 2</label>
             </div>
             <div class="input-field col s12 m4">
-                <input value="{{ $phones[2] ?? old('phones')[2] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
+                <input value="{{ $phones[2] != null?$phones[2]:'' ?? old('phones')[2] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
                 <label for="phone3">Telefone 3</label>
             </div>
         </div>

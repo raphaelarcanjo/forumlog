@@ -14,13 +14,13 @@ class CreateForumTable extends Migration
     public function up()
     {
         Schema::create('forum', function (Blueprint $table) {
-			$table->id();
-			$table->string('title');
-			$table->json('users')->nullable();
-			$table->boolean('private')->default(false);
-            $table->integer('created_by');
+            $table->id();
+            $table->string('title');
+            $table->json('users')->nullable();
+            $table->boolean('private')->default(false);
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

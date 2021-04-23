@@ -4,8 +4,8 @@
 @section('content')
     <h4>Perfil de <span class="teal-text">{{$user->name}}</span></h4>
 
-    
-    <form action="{{url('user/profile/'.$user->tagname)}}" method="post" enctype="multipart/form-data">
+
+    <form action="{{url('user/profile/'.$user->id)}}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="input-field col s12 m6">
@@ -15,9 +15,13 @@
                 <input type="file" accept="image/jpg, image/png, image/jpeg" id="photo" name="photo" onchange="preview_photo(event)" />
                 <label for="photo"></label>
             </div>
-            <div class="input-field col s12 m9">
+            <div class="input-field col s12 m6">
                 <input value="{{ $user->name ?? old('name') }}" type="text" id="name" name="name" class="validate" />
                 <label for="name">Nome completo</label>
+            </div>
+            <div class="input-field col s12 m3">
+                <input value="{{ $user->tagname ?? old('tagname') }}" type="text" id="tagname" name="tagname" class="validate" />
+                <label for="tagname">Nome de usuário</label>
             </div>
             <div class="input-field col s12 m3">
                 <input value="{{ $user->birth ?? old('birth') }}" type="text" id="birth" name="birth" class="validate datepicker date" />
@@ -31,15 +35,15 @@
                 <span class="helper-text" data-error="Formato de e-mail inválido" data-success="E-mail válido">Digite um e-mail válido</span>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ json_decode($user->phones)[0] ?? old('phones')[0] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
+                <input value="{{ $user->phones[0] != null?$user->phones[0]:'' ?? old('phones')[0] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
                 <label for="phone1">Telefone 1</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ json_decode($user->phones)[1] ?? old('phones')[1] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
+                <input value="{{ $user->phones[1] != null?$user->phones[1]:'' ?? old('phones')[1] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
                 <label for="phone2">Telefone 2</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ json_decode($user->phones)[2] ?? old('phones')[2] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
+                <input value="{{ $user->phones[2] != null?$user->phones[2]:'' ?? old('phones')[2] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
                 <label for="phone3">Telefone 3</label>
             </div>
         </div>

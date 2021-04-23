@@ -34,10 +34,13 @@
                                 </label>
                             </p>
                         </div>
-                        <div class="input-field center-align">
+                        <div class="input-field left">
+                            <a href="{{url('user/register')}}" type="submit" class="waves-effect waves-light btn-small red lighten-2">Cadastre-se</a>
+                        </div>
+                        <div class="input-field right">
                             <button type="submit" class="waves-effect waves-light btn-small">Entrar</button>
                         </div>
-                        <div class="input-field center-align">
+                        <div class="input-field left-align">
                             <a href="{{url('user/recover')}}">Recuperar senha</a>
                         </div>
                     </form>

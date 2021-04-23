@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                    <a href="{{url('blog/'.$post->created_by)}}">{{$post->tagname}}</a>
+                    <a href="{{url('blog/'.$post->created_by)}}">{{$post->user_name}}</a>
                 </span>
                 <p>{{$post->message}}</p>
             </div>

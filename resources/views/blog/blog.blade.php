@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                    <a href="{{url('blog/'.$tagname)}}">{{$tagname}}</a>
+                    <a href="{{url('blog/'.id)}}">{{name}}</a>
                 </span>
                 <p>{{$post->message}}</p>
             </div>

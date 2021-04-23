@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
-use App\Blog;
-use App\Comments;
+use App\Models\User;
+use App\Models\Blog;
+use App\Models\Comments;
 
 class BlogController extends Controller
 {
-    public function index(Request $request, $tagname = null)
+    public function index(Request $request, $id = null)
     {
         $data['title'] = 'Blog';
         $data['name'] = null;
@@ -19,9 +19,9 @@ class BlogController extends Controller
         if (Auth::check()) $perfil = Auth::user();
         else return view('blog.home', $data);
 
-        if ($tagname) {
+        if ($id) {
             $perfil = User::where([
-                    ['tagname', '=', $tagname],
+                    ['id', '=', $id],
                     ['ban', '=', 0]
                     ])
                 ->first();
@@ -45,6 +45,7 @@ class BlogController extends Controller
             $data['posts']      = $posts;
             $data['fullname']   = $perfil['name'];
             $data['tagname']    = $perfil['tagname'];
+            $data['id']         = $id;
             $data['name']       = explode(' ',$perfil['name'])[0];
         }
         else {

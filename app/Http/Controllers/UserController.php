@@ -12,16 +12,19 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\MessageBag;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
-use App\User;
+use App\Models\User;
 
 
 class UserController extends Controller
 {
-    public function profile(Request $request, string $id)
+    public function profile(Request $request, $id)
     {
         $data['phones'] = ['','',''];
         $data['title'] = 'Perfil';
-        $data['user'] = Auth::user();
+        $user = Auth::user();
+        $user->birth = date('d/m/Y', strtotime($user->birth));
+        $user->phones = json_decode($user->phones);
+        $data['user'] = $user;
 
         if ($id != Auth::id()) {
             $request->session()->flash('error','Não é possível visualizar ou alterar o perfil de outros usuários!');
@@ -42,11 +45,10 @@ class UserController extends Controller
                 'country'   => 'required|max:60',
             ]);
 
-            $user               = new User();
-            $user->idate        = $id;
+            $user               = User::find($id);
             $user->name         = $request->input('name');
             $user->email        = strtolower($request->input('email'));
-            $user->tagname      = strtolower($tagname);
+            $user->tagname      = strtolower($request->input('tagname'));
             $user->phones       = json_encode($request->input('phones'));
             $user->cep          = (string)$request->input('cep');
             $user->address      = $request->input('address');
@@ -55,7 +57,7 @@ class UserController extends Controller
             $user->city         = $request->input('city');
             $user->state        = $request->input('state');
             $user->country      = $request->input('country');
-            $user->birth        = $request->input('birth');
+            $user->birth        = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
 
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
@@ -69,7 +71,7 @@ class UserController extends Controller
                 else $request->session()->flash('error','Erro ao fazer upload da imagem!');
             }
 
-            if ($user->update()) $request->session()->flash('success','Perfil atualizado com sucesso!');
+            if ($user->save()) $request->session()->flash('success','Perfil atualizado com sucesso!');
             else $request->session()->flash('error','Erro ao tentar atualizar o seu cadastro!');
         }
 
@@ -115,7 +117,7 @@ class UserController extends Controller
             $user->city         = $request->input('city');
             $user->state        = $request->input('state');
             $user->country      = $request->input('country');
-            $user->birth        = $request->input('birth');
+            $user->birth        = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
             $user->ban          = 0;
             $user->password     = Hash::make($request->input('password'));
 
