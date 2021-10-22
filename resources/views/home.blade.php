@@ -26,7 +26,7 @@
                             <p class="card-title">Comentários</p>
                             @foreach ($post->comments as $comment)
                                 <p>
-                                    <a href="{{url('blog/'.$comment->comment_by)}}">{{$comment->comment_by}}:</a>
+                                    <a href="{{url('blog/'.$comment->comment_by)}}">{{$comment->author_name}}:</a>
                                     {{$comment->comment}}
                                     @can ('delete-comment', $comment)
                                         <a href="{{url('post/deletecomment/'.$comment->id)}}" class="btn-flat waves-effect waves-red"><i class="material-icons">delete</i></a>

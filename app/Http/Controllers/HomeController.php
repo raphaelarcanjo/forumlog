@@ -23,7 +23,9 @@ class HomeController extends Controller
                 ->get();
 
             foreach ($posts as &$post) {
-                $post->comments = Comments::where('post', '=', $post->id)
+                $post->comments = Comments::selectRaw('blog_comments.*, users.name author_name')
+                    ->where('post', '=', $post->id)
+                    ->leftJoin('users', 'users.id', '=', 'blog_comments.comment_by')
                     ->orderBy('updated_at')
                     ->get();
             }

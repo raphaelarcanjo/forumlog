@@ -13,26 +13,28 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('tagname')->unique();
-            $table->json('phones')->nullable();
-            $table->string('cep');
-            $table->string('address');
-            $table->string('complement');
-            $table->string('suburb');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
-            $table->date('birth');
-            $table->string('photo')->default('no-image.jpg');
-            $table->boolean('ban')->default(false);
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->string('tagname')->unique();
+                $table->json('phones')->nullable();
+                $table->string('cep');
+                $table->string('address');
+                $table->string('complement');
+                $table->string('suburb');
+                $table->string('city');
+                $table->string('state');
+                $table->string('country');
+                $table->date('birth');
+                $table->string('photo')->default('no-image.jpg');
+                $table->boolean('ban')->default(false);
+                $table->string('password');
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

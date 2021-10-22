@@ -61,7 +61,7 @@ class UserController extends Controller
 
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
-                $photo_name = 'photo_'.$tagname.'.'.$photo->getClientOriginalExtension();
+                $photo_name = 'photo_'.$user->tagname.'.'.$photo->getClientOriginalExtension();
 
                 $destination = public_path('users');
 

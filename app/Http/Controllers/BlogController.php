@@ -29,15 +29,17 @@ class BlogController extends Controller
 
         if ($perfil)
         {
-            $posts = Blog::selectRaw('count(blog_comments.id) as comments_count, blog.*')
-                ->leftJoin('blog_comments','blog_comments.post','=','blog.id')
+            $posts = Blog::selectRaw('count(blog_comments.id) comments_count, blog.*')
                 ->where('blog.created_by', '=', $perfil->id)
+                ->leftJoin('blog_comments','blog_comments.post','=','blog.id')
                 ->orderBy('blog.id', 'desc')
                 ->groupBy('blog.id')
                 ->get();
 
             foreach ($posts as &$post) {
-                $post->comments = Comments::where('post', '=', $post->id)
+                $post->comments = Comments::selectRaw('blog_comments.*, users.name author_name')
+                    ->where('post', '=', $post->id)
+                    ->leftJoin('users', 'users.id', '=', 'blog_comments.comment_by')
                     ->orderBy('updated_at')
                     ->get();
             }
@@ -112,7 +114,7 @@ class BlogController extends Controller
 
         $comment['comment'] = $request->input('comment');
         $comment['post'] = $request->input('post_id');
-        $comment['comment_by'] = Auth::user()->tagname;
+        $comment['comment_by'] = Auth::user()->id;
         $comment->save();
 
         return redirect()->back();

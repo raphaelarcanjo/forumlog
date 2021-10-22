@@ -13,14 +13,16 @@ class CreateBlogTable extends Migration
      */
     public function up()
     {
-        Schema::create('blog', function (Blueprint $table) {
-			$table->id();
-			$table->text('message');
-			$table->boolean('private')->default(false);
-            $table->unsignedBigInteger('created_by');
-            $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        if (!Schema::hasTable('blog')) {
+            Schema::create('blog', function (Blueprint $table) {
+                $table->id();
+                $table->text('message');
+                $table->boolean('private')->default(false);
+                $table->unsignedBigInteger('created_by');
+                $table->timestamps();
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**

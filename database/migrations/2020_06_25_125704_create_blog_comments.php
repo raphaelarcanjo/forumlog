@@ -13,14 +13,16 @@ class CreateBlogComments extends Migration
      */
     public function up()
     {
-        Schema::create('blog_comments', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('comment_by');
-            $table->string('comment');
-            $table->integer('post');
-            $table->timestamps();
-            $table->foreign('comment_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        if (!Schema::hasTable('blog_comments')) {
+            Schema::create('blog_comments', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('comment_by');
+                $table->string('comment');
+                $table->integer('post');
+                $table->timestamps();
+                $table->foreign('comment_by')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**
