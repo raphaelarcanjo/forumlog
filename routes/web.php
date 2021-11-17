@@ -3,36 +3,32 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserController;
 
-Route::match(['get','post'], '/', 'HomeController@index')->name('home');
-Route::get('about', 'AboutController@index')->name('about');
-Route::get('forum', 'ForumController@index')->name('forum');
-Route::get('blog/{id?}', 'BlogController@index')->name('blog');
-Route::post('contact', 'ContactController@index')->name('contact');
+Route::match(['get','post'], '/', [HomeController::class,'index'])->name('home');
+Route::get('about', [AboutController::class,'index'])->name('about');
+Route::get('forum', [ForumController::class,'index'])->name('forum');
+Route::get('blog/{id?}', [BlogController::class,'index'])->name('blog');
+Route::post('contact', [ContactController::class,'index'])->name('contact');
 
 Route::prefix('post')->group(function() {
-    Route::match(['get','post'],'create', 'BlogController@createpost');
-    Route::get('private/{id}', 'BlogController@privatepost');
-    Route::get('delete/{id}', 'BlogController@deletepost');
-    Route::post('comment', 'BlogController@createcomment');
-    Route::get('deletecomment/{id}', 'BlogController@deletecomment');
+    Route::match(['get','post'],'create', [BlogController::class,'createpost']);
+    Route::get('private/{id}', [BlogController::class,'privatepost']);
+    Route::get('delete/{id}', [BlogController::class,'deletepost']);
+    Route::post('comment', [BlogController::class,'createcomment']);
+    Route::get('deletecomment/{id}', [BlogController::class,'deletecomment']);
 });
 
 Route::prefix('user')->group(function () {
-    Route::match(['get','post'],'register', 'UserController@register');
-    Route::post('login', 'UserController@login')->name('login');
-    Route::match(['get', 'post'], 'recover/{token?}', 'UserController@recover')->name('password.reset');
-    Route::match(['get','post'], 'profile/{tagname?}', 'UserController@profile');
-    Route::get('logout', 'UserController@logout');
-    Route::get('getusers', 'UserController@getusers');
+    Route::match(['get','post'],'register', [UserController::class,'register']);
+    Route::post('login', [UserController::class,'login'])->name('login');
+    Route::match(['get', 'post'], 'recover/{token?}', [UserController::class,'recover'])->name('password.reset');
+    Route::match(['get','post'], 'profile/{tagname?}', [UserController::class,'profile']);
+    Route::get('logout', [UserController::class,'logout']);
+    Route::get('getusers', [UserController::class,'getusers']);
 });
