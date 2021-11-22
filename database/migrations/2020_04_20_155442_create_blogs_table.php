@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateForumTable extends Migration
+class CreateBlogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateForumTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('forum')) {
-            Schema::create('forum', function (Blueprint $table) {
+        if (!Schema::hasTable('blogs')) {
+            Schema::create('blogs', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
                 $table->id();
-                $table->string('title');
-                $table->json('users')->nullable();
+                $table->text('message');
                 $table->boolean('private')->default(false);
-                $table->unsignedBigInteger('created_by');
+                $table->unsignedBigInteger('user_id');
                 $table->timestamps();
-                $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
     }
@@ -33,6 +33,6 @@ class CreateForumTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('forum');
+        Schema::dropIfExists('blogs');
     }
 }

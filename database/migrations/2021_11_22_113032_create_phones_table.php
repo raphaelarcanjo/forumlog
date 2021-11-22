@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBlogTable extends Migration
+class CreatePhonesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateBlogTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('blog')) {
-            Schema::create('blog', function (Blueprint $table) {
+        if (!Schema::hasTable('phones')) {
+            Schema::create('phones', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
                 $table->id();
-                $table->text('message');
-                $table->boolean('private')->default(false);
-                $table->unsignedBigInteger('created_by');
+                $table->unsignedBigInteger('user_id');
+                $table->string('number', 11);
                 $table->timestamps();
-                $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
     }
@@ -32,6 +32,6 @@ class CreateBlogTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog');
+        Schema::dropIfExists('phones');
     }
 }

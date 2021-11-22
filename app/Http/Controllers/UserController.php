@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\Phone;
+use App\Models\Address;
 
 
 class UserController extends Controller
@@ -80,7 +83,6 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        $data['title'] = 'Cadastro';
         $data['phones'] = ['','',''];
 
         if (Auth::check()) return redirect()->route('home');
@@ -92,45 +94,61 @@ class UserController extends Controller
             $valid = $request->validate([
                 'name'      => 'required|max:80',
                 'email'     => 'required|max:80',
-                'tagname'   => 'required|unique:users|max:24',
-                'cep'       => 'required|max:9',
-                'address'   => 'required|max:80',
-                'complement'=> 'max:60',
-                'suburb'    => 'required|max:80',
-                'city'      => 'required|max:80',
-                'state'     => 'required|max:80',
-                'country'   => 'required|max:60',
+                'username'   => 'required|unique:users|max:32',
                 'birth'     => 'required',
                 'password'  => 'required|confirmed|min:8',
+                'cep'       => 'required|max:9',
+                'address'   => 'required|max:120',
+                'complement'=> 'max:80',
+                'suburb'    => 'required|max:60',
+                'city'      => 'required|max:60',
+                'province'     => 'required|max:60',
+                'country'   => 'required|max:60',
             ]);
 
-            $user = new User();
+            try {
+                DB::beginTransaction();
 
-            $user->name         = $request->input('name');
-            $user->email        = strtolower($request->input('email'));
-            $user->tagname      = strtolower($request->input('tagname'));
-            $user->phones       = json_encode($request->input('phones'));
-            $user->cep          = (string)$request->input('cep');
-            $user->address      = $request->input('address');
-            $user->complement   = $request->input('complement');
-            $user->suburb       = $request->input('suburb');
-            $user->city         = $request->input('city');
-            $user->state        = $request->input('state');
-            $user->country      = $request->input('country');
-            $user->birth        = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
-            $user->ban          = 0;
-            $user->password     = Hash::make($request->input('password'));
+                $user = new User();
+                $user->name         = $request->input('name');
+                $user->email        = strtolower($request->input('email'));
+                $user->username     = strtolower($request->input('username'));
+                $user->birth        = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
+                $user->password     = Hash::make($request->input('password'));
+                $user->save();
+    
+                $address = new Address();
+                $address->user_id      = $user->id;
+                $address->cep          = (string) preg_replace('/[^0-9]/', '', $request->input('cep'));
+                $address->address      = $request->input('address');
+                $address->complement   = $request->input('complement');
+                $address->suburb       = $request->input('suburb');
+                $address->city         = $request->input('city');
+                $address->province     = $request->input('province');
+                $address->country      = $request->input('country');
+                $address->save();
+                
+                foreach ($request->input('phones') as $number) {
+                    if (empty($number)) continue;
+                    $phone = new Phone();
+                    $phone->user_id      = $user->id;
+                    $phone->number       = (string) preg_replace('/[^0-9]/', '', $number);
+                    $phone->save();
+                }
 
-            if ($user->save()) {
-                $request->session()->flash('success','Usuário cadastrado com sucesso!');
+                DB::commit();
+
+                $request->session()->flash('success', 'Usuário cadastrado com sucesso!');
                 return redirect()->route('home');
-            }
-            else {
-                $request->session()->flash('error','Erro ao tentar cadastrar o usuário!');
+            } catch (\Throwable $th) {
+                DB::rollBack();
+
+                $request->session()->flash('error', 'Erro ao tentar cadastrar o usuário! -> '.$th->getMessage());
             }
         }
 
-        return view('register',$data);
+        $data['title'] = 'Cadastro';
+        return view('register', $data);
     }
 
     public function recover(Request $request, $token = null)

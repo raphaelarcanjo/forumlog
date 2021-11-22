@@ -1,5 +1,5 @@
 @extends('templates.layout')
-@section('title',$title)
+@section('title', $title)
 
 @section('content')
     <h4>Cadastro</h4>
@@ -18,8 +18,8 @@
         </div>
         <div class="row">
             <div class="input-field col s12 m4">
-                <input value="{{ $tagname ?? old('tagname') }}" type="text" id="tagname" name="tagname" pattern="[a-z0-9.]{8,24}" minlength="8" maxlength="24" class="validate" onchange="tagAddress()" required />
-                <label for="tagname">Nome único (login)</label>
+                <input value="{{ $username ?? old('username') }}" type="text" id="username" name="username" pattern="[a-z0-9.]{8,24}" minlength="8" maxlength="24" class="validate" onchange="tagAddress()" required />
+                <label for="username">Nome único (login)</label>
                 <span class="helper-text" data-error="Apenas letras minúsculas sem espaço e números. Tamanho entre 8 e 24 caracteres" data-success="" id="tagUrl">
                     Esse nome será usado para visitas ao seu blog por outros usuários e também para fazer login na usa conta.
                 </span>
@@ -69,8 +69,8 @@
                 <label class="" for="city">Cidade</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ $state ?? old('state') }}" type="text" id="state" name="state" class="validate" required />
-                <label class="" for="state">Estado/província</label>
+                <input value="{{ $province ?? old('province') }}" type="text" id="province" name="province" class="validate" required />
+                <label class="" for="province">Estado/província</label>
             </div>
             <div class="input-field col s12 m3">
                 <input value="{{ $country ?? old('country') }}" type="text" id="country" name="country" class="validate" required />

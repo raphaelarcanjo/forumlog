@@ -15,22 +15,15 @@ class CreateUsersTable extends Migration
     {
         if (!Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
                 $table->id();
-                $table->string('name');
-                $table->string('email')->unique();
-                $table->string('tagname')->unique();
-                $table->json('phones')->nullable();
-                $table->string('cep');
-                $table->string('address');
-                $table->string('complement');
-                $table->string('suburb');
-                $table->string('city');
-                $table->string('state');
-                $table->string('country');
+                $table->string('name', 80);
+                $table->string('email', 80)->unique();
+                $table->string('username', 32)->unique();
                 $table->date('birth');
-                $table->string('photo')->default('no-image.jpg');
-                $table->boolean('ban')->default(false);
-                $table->string('password');
+                $table->string('photo', 255)->default('no-image.jpg');
+                $table->boolean('is_active')->default(false);
+                $table->string('password', 128);
                 $table->rememberToken();
                 $table->timestamps();
             });
