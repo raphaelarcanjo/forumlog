@@ -63,7 +63,7 @@
         $(document).ready(()=> {
             $('input.autocomplete').autocomplete({
                 data: {
-                    "{{Auth::user()->tagname}}": "{{url('public/users/'.Auth::user()->photo)}}",
+                    "{{Auth::user()->username}}": "{{url('public/users/'.Auth::user()->photo)}}",
                 },
                 onAutocomplete: function(tag) {
                     window.location.href = "{{url('blog')}}/" + tag

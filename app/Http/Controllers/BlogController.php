@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Blog;
-use App\Models\Comments;
+use App\Models\BlogComment;
 
 class BlogController extends Controller
 {
-    public function index(Request $request, $id = null)
+    public function index(Request $request, $username = null)
     {
         $data['title'] = 'Blog';
         $data['name'] = null;
@@ -19,36 +19,38 @@ class BlogController extends Controller
         if (Auth::check()) $perfil = Auth::user();
         else return view('blog.home', $data);
 
-        if ($id) {
+        if ($username) {
             $perfil = User::where([
-                    ['id', '=', $id],
-                    ['ban', '=', 0]
+                    ['username', $username],
+                    ['is_active', 1]
                     ])
                 ->first();
         }
 
         if ($perfil)
         {
-            $posts = Blog::selectRaw('count(blog_comments.id) comments_count, blog.*')
-                ->where('blog.created_by', '=', $perfil->id)
-                ->leftJoin('blog_comments','blog_comments.post','=','blog.id')
-                ->orderBy('blog.id', 'desc')
-                ->groupBy('blog.id')
+            $blogs = Blog::selectRaw('count(blog_comments.id) comments_count, blogs.*')
+                ->where('blogs.user_id', $perfil->id)
+                ->leftJoin('blog_comments','blog_comments.blog_id','=','blogs.id')
+                ->orderBy('blogs.id', 'desc')
+                ->groupBy('blogs.id')
                 ->get();
 
-            foreach ($posts as &$post) {
-                $post->comments = Comments::selectRaw('blog_comments.*, users.name author_name')
-                    ->where('post', '=', $post->id)
-                    ->leftJoin('users', 'users.id', '=', 'blog_comments.comment_by')
+            foreach ($blogs as &$blog) {
+                $blog->comments = BlogComment::selectRaw('blog_comments.*, users.name author_name')
+                    ->where('blog_id', $blog->id)
+                    ->leftJoin('users', 'users.id', 'blog_comments.user_id')
                     ->orderBy('updated_at')
                     ->get();
             }
 
-            $data['posts']      = $posts;
-            $data['fullname']   = $perfil['name'];
-            $data['tagname']    = $perfil['tagname'];
-            $data['id']         = $id;
-            $data['name']       = explode(' ',$perfil['name'])[0];
+            $data = [
+                'blogs'     => $blogs,
+                'fullname'  => $perfil['name'],
+                'username'  => $perfil['username'],
+                'id'        => $perfil['id'],
+                'name'      => explode(' ',$perfil['name'])[0],
+            ];
         }
         else {
             $request->session()->flash('error', 'Blog não encontrado.');
@@ -58,71 +60,71 @@ class BlogController extends Controller
         return view('blog.blog', $data);
     }
 
-    public function createpost(Request $request)
+    public function create(Request $request)
     {
-        $data['title'] = 'Blog';
-
         if (!empty($request->only('message','private'))) {
             $valid = $request->validate([
                 'message' => 'required|max:150'
             ]);
 
-            $post = new Blog();
+            $blog = new Blog();
 
-            $post['message']    = $request->input('message');
-            $post['private']    = (bool) $request->input('private');
-            $post['created_by'] = Auth::id();
+            $blog['message']    = $request->input('message');
+            $blog['private']    = (bool) $request->input('private');
+            $blog['user_id'] = Auth::id();
 
-            if ($post->save()) {
+            if ($blog->save()) {
                 $request->session()->flash('success','Post criado!');
                 return redirect('blog/'.session('user'));
             }
             else $request->session()->flash('error','Não foi possível criar o post!');
         }
 
+        $data['title'] = 'Blog';
+
         return view('blog.create', $data);
     }
 
-    public function privatepost(Request $request, $id)
+    public function private(Request $request, $id)
     {
-        $state = Blog::where('id', '=', $id)->first();
+        $state = Blog::where('id', $id)->first();
         $state->private = ! $state->private;
 
         if ($state->update()) {
-            Comments::where('post', '=', $id)->delete();
+            BlogComment::where('blog_id', $id)->delete();
             $request->session()->flash('success','Post atualizado!');
         }
 
         return redirect()->back();
     }
 
-    public function deletepost(Request $request, $id)
+    public function delete(Request $request, $id)
     {
-        Blog::where('id', '=', $id)->delete();
+        Blog::where('id', $id)->delete();
         $request->session()->flash('success','Post excluído!');
 
         return redirect()->back();
     }
 
-    public function createcomment(Request $request)
+    public function createComment(Request $request)
     {
         $valid = $request->validate([
             'comment' => 'required|max:150',
         ]);
 
-        $comment = new Comments();
+        $comment = new BlogComment();
 
-        $comment['comment'] = $request->input('comment');
-        $comment['post'] = $request->input('post_id');
-        $comment['comment_by'] = Auth::user()->id;
+        $comment['message'] = $request->input('comment');
+        $comment['blog_id'] = $request->input('blog_id');
+        $comment['user_id'] = Auth::user()->id;
         $comment->save();
 
         return redirect()->back();
     }
 
-    public function deletecomment(Request $request, $id)
+    public function deleteComment(Request $request, $id)
     {
-        Comments::where('id', '=', $id)->delete();
+        BlogComment::where('id', $id)->delete();
         $request->session()->flash('success','Comentário excluído!');
 
         return redirect()->back();

@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
                 $table->string('username', 32)->unique();
                 $table->date('birth');
                 $table->string('photo', 255)->default('no-image.jpg');
-                $table->boolean('is_active')->default(false);
+                $table->boolean('is_active')->default(true);
                 $table->string('password', 128);
                 $table->rememberToken();
                 $table->timestamps();

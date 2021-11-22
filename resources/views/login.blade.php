@@ -19,7 +19,7 @@
                     <form action="{{url('user/login')}}" method="post">
                         @csrf
                         <div class="input-field">
-                            <label for="loginM">Login</label>
+                            <label for="loginM">E-mail</label>
                             <input type="email" name="email" id="loginM" class="validate" required />
                         </div>
                         <div class="input-field">

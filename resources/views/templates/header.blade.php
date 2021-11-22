@@ -29,7 +29,7 @@
     @auth
         <ul id="userMenu" class="dropdown-content">
             <li>
-                <a href="{{url('user/profile/'.Auth::id())}}">
+                <a href="{{url('user/profile')}}">
                     <i class="material-icons small">assignment_ind</i>Perfil
                 </a>
             </li>
@@ -55,7 +55,8 @@
                     </li>
                     <li class="right">
                         <a href="#" class="dropdown-trigger" data-target="userMenu">
-                            <i class="material-icons left">account_circle</i>Usuário<i class="material-icons right">arrow_drop_down</i></a>
+                            <i class="material-icons left">account_circle</i>Usuário<i class="material-icons right">arrow_drop_down</i>
+                        </a>
                     </li>
                 </ul>
             </div>

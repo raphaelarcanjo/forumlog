@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Blog extends Model
 {
     use HasFactory;
+
+    public function blog_comment()
+    {
+        return $this->hasMany(BlogComment::class);
+    }
 }

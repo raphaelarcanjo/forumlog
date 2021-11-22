@@ -11,4 +11,19 @@ class User extends Authenticatable implements CanResetPassword
 {
     use Notifiable;
     use HasFactory;
+
+    public function blog()
+    {
+        return $this->hasMany(Blog::class);
+    }
+
+    public function phone()
+    {
+        return $this->hasMany(Phone::class);
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
 }

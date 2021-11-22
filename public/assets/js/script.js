@@ -66,7 +66,7 @@ const getAddress = ()=> {
 }
 
 const tagAddress = ()=> {
-    $("#tagUrl").attr('data-success', 'http://forumlog/blog/' + $("#tagname").val())
+    $("#tagUrl").attr('data-success', 'http://forumlog/blog/' + $("#username").val())
 }
 
 const confirmPass = () => {

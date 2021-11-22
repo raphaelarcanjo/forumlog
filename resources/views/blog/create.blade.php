@@ -4,7 +4,7 @@
 @section('content')
     <h4>Criar postagem</h4>
 
-    <form action="{{url('post/create')}}" method="post">
+    <form action="{{url('blog/create')}}" method="post">
         @csrf
         <div class="row">
             <div class="input-field col s12">

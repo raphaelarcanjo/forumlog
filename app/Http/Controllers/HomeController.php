@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Blog;
-use App\Models\Comments;
+use App\Models\BlogComment;
 
 class HomeController extends Controller
 {
@@ -15,22 +15,22 @@ class HomeController extends Controller
         $data['title'] = 'Home';
 
         if (Auth::check()) {
-            $posts = Blog::selectRaw('blog.*, users.tagname, users.name as user_name, count(blog_comments.id) as comments_count')
-                ->leftJoin('blog_comments','blog_comments.post','=','blog.id')
-                ->join('users','users.id','=','blog.created_by')
+            $blogs = Blog::selectRaw('blogs.*, users.username, users.name as user_name, count(blog_comments.id) as comments_count')
+                ->leftJoin('blog_comments','blog_comments.blog_id','blogs.id')
+                ->join('users','users.id','blogs.user_id')
                 ->orderBy('id', 'desc')
-                ->groupBy('blog.id')
+                ->groupBy('blogs.id')
                 ->get();
 
-            foreach ($posts as &$post) {
-                $post->comments = Comments::selectRaw('blog_comments.*, users.name author_name')
-                    ->where('post', '=', $post->id)
-                    ->leftJoin('users', 'users.id', '=', 'blog_comments.comment_by')
+            foreach ($blogs as &$blog) {
+                $blog->comments = BlogComment::selectRaw('blog_comments.*, users.name author_name')
+                    ->where('blog_id', $blog->id)
+                    ->leftJoin('users', 'users.id', 'blog_comments.user_id')
                     ->orderBy('updated_at')
                     ->get();
             }
 
-            $data['posts'] = $posts;
+            $data['blogs'] = $blogs;
 
             return view('home', $data);
         }
