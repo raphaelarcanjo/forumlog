@@ -44,13 +44,11 @@ class BlogController extends Controller
                     ->get();
             }
 
-            $data = [
-                'blogs'     => $blogs,
-                'fullname'  => $perfil['name'],
-                'username'  => $perfil['username'],
-                'id'        => $perfil['id'],
-                'name'      => explode(' ',$perfil['name'])[0],
-            ];
+            $data['blogs']     = $blogs;
+            $data['fullname']  = $perfil['name'];
+            $data['username']  = $perfil['username'];
+            $data['id']        = $perfil['id'];
+            $data['name']      = explode(' ',$perfil['name'])[0];
         }
         else {
             $request->session()->flash('error', 'Blog não encontrado.');

@@ -28,7 +28,9 @@
             @can('delete-blog', $blog)
                 <div class="card-action">
                     <a href="{{url('blog/delete/'.$blog->id)}}" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete</i>Excluir post</a>
-                    <a href="{{url('blog/private/'.$blog->id)}}" class="btn waves-effect waves-light {{($blog->private) ? 'red' : 'green'}}"><i class="material-icons left">message</i>{{($blog->private) ? 'Não privado' : 'privado'}}</a>
+                    <a href="{{url('blog/private/'.$blog->id)}}" class="btn waves-effect waves-light {{($blog->private) ? 'green' : 'red'}}" title="Torna o post privado ou não, liberando ou proibindo comentários">
+                        <i class="material-icons left">{{ ($blog->private) ? 'do_not_disturb_off' : 'do_not_disturb_on' }}</i>{{($blog->private) ? 'Não privado' : 'privado'}}
+                    </a>
                 </div>
             @endcan
 
@@ -44,11 +46,13 @@
                             <p class="card-title">Comentários</p>
                             @foreach ($blog->comments as $comment)
                                 <p>
+                                    @can ('delete-comment', $comment)
+                                        <a href="{{url('blog/deletecomment/'.$comment->id)}}" class="btn-flat waves-effect waves-red" style="padding: 0">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                    @endcan
                                     <a href="{{url('blog/'.$comment->user_id)}}">{{$comment->author_name}}:</a>
                                     {{$comment->message}}
-                                    @can ('delete-comment', $comment)
-                                        <a href="{{url('blog/deletecomment/'.$comment->id)}}" class="btn-flat waves-effect waves-red"><i class="material-icons">delete</i></a>
-                                    @endcan
                                 </p>
                             @endforeach
                             <textarea name="comment" class="materialize-textarea"></textarea>
