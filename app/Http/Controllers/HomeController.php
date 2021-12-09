@@ -19,8 +19,13 @@ class HomeController extends Controller
                 ->leftJoin('blog_comments','blog_comments.blog_id','blogs.id')
                 ->join('users','users.id','blogs.user_id')
                 ->orderBy('id', 'desc')
-                ->groupBy('blogs.id')
+                ->groupBy(['blogs.id', 'users.username', 'users.name'])
                 ->get();
+            // $blogs = Blog::withCount('comments')
+            //     ->with('user')
+            //     ->with('comments', 'comments.user')
+            // ->orderBy('blogs.id', 'desc')
+            //     ->get();
 
             foreach ($blogs as &$blog) {
                 $blog->comments = BlogComment::selectRaw('blog_comments.*, users.name author_name')

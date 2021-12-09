@@ -33,8 +33,13 @@ class BlogController extends Controller
                 ->where('blogs.user_id', $perfil->id)
                 ->leftJoin('blog_comments','blog_comments.blog_id','=','blogs.id')
                 ->orderBy('blogs.id', 'desc')
-                ->groupBy('blogs.id')
+                ->groupBy(['blogs.id'])
                 ->get();
+            
+            // $blogs = Blog::withCount('comments')
+            //     ->with('comments', 'comments.user')
+                // ->orderBy('blogs.id', 'desc')
+            //     ->get();
 
             foreach ($blogs as &$blog) {
                 $blog->comments = BlogComment::selectRaw('blog_comments.*, users.name author_name')

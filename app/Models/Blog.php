@@ -9,8 +9,13 @@ class Blog extends Model
 {
     use HasFactory;
 
-    public function blog_comment()
+    public function comments()
     {
-        return $this->hasMany(BlogComment::class);
+        return $this->hasMany(BlogComment::class)->orderBy('id', 'cres');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
