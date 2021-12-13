@@ -29,25 +29,10 @@ class BlogController extends Controller
 
         if ($perfil)
         {
-            $blogs = Blog::selectRaw('count(blog_comments.id) comments_count, blogs.*')
-                ->where('blogs.user_id', $perfil->id)
-                ->leftJoin('blog_comments','blog_comments.blog_id','=','blogs.id')
+            $blogs = Blog::withCount('comments')
+                ->with('comments', 'comments.user')
                 ->orderBy('blogs.id', 'desc')
-                ->groupBy(['blogs.id'])
                 ->get();
-            
-            // $blogs = Blog::withCount('comments')
-            //     ->with('comments', 'comments.user')
-                // ->orderBy('blogs.id', 'desc')
-            //     ->get();
-
-            foreach ($blogs as &$blog) {
-                $blog->comments = BlogComment::selectRaw('blog_comments.*, users.name author_name')
-                    ->where('blog_id', $blog->id)
-                    ->leftJoin('users', 'users.id', 'blog_comments.user_id')
-                    ->orderBy('updated_at')
-                    ->get();
-            }
 
             $data['blogs']     = $blogs;
             $data['fullname']  = $perfil['name'];

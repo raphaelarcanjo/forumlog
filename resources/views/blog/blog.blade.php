@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                    <a href="{{url('blog'.$id)}}">{{$name}}</a>
+                    <a href="{{url('blog/'.$username)}}">{{$name}}</a>
                 </span>
                 <p>{{$blog->message}}</p>
             </div>
@@ -29,7 +29,7 @@
                 <div class="card-action">
                     <a href="{{url('blog/delete/'.$blog->id)}}" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete</i>Excluir post</a>
                     <a href="{{url('blog/private/'.$blog->id)}}" class="btn waves-effect waves-light {{($blog->private) ? 'green' : 'red'}}" title="Torna o post privado ou não, liberando ou proibindo comentários">
-                        <i class="material-icons left">{{ ($blog->private) ? 'do_not_disturb_off' : 'do_not_disturb_on' }}</i>{{($blog->private) ? 'Não privado' : 'privado'}}
+                        <i class="material-icons left">{{ ($blog->private) ? 'do_not_disturb_off' : 'do_not_disturb_on' }}</i>{{($blog->private) ? 'Não privado' : 'Privado'}}
                     </a>
                 </div>
             @endcan
@@ -51,7 +51,7 @@
                                             <i class="material-icons">delete</i>
                                         </a>
                                     @endcan
-                                    <a href="{{url('blog/'.$comment->user_id)}}">{{$comment->author_name}}:</a>
+                                    <a href="{{url('blog/'.$comment->user->username)}}">{{$comment->user->name}}:</a>
                                     {{$comment->message}}
                                 </p>
                             @endforeach
