@@ -74,7 +74,7 @@ class UserController extends Controller
 
                 foreach ($request->input('phones') as $number) {
                     if (empty($number)) continue;
-                    $phone              = Phone::where('user_id', Auth::id())->all();
+                    $phone              = new Phone();
                     $phone->user_id     = Auth::id();
                     $phone->number      = (string) preg_replace('/[^0-9]/', '', $number);
                     $phone->save();

@@ -5,7 +5,7 @@
     <h4>Perfil de <span class="teal-text">{{$user->name}}</span></h4>
 
 
-    <form action="{{url('user/profile/'.$user->id)}}" method="post" enctype="multipart/form-data">
+    <form action="{{url('user/profile')}}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="input-field col s12 m6">
