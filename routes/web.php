@@ -32,3 +32,7 @@ Route::prefix('user')->group(function () {
     Route::get('logout', [UserController::class,'logout']);
     Route::get('getusers', [UserController::class,'getusers']);
 });
+
+Route::prefix('forum')->group(function () {
+    Route::match(['get', 'post'],'create', [ForumController::class,'create']);
+});

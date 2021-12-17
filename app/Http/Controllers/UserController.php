@@ -222,17 +222,16 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-        $remember = $request->input('remember');
-
-        if ($credentials)
+        $valid = $request->validate([
+            'email'     => 'required|email',
+            'password'  => 'required'
+        ]);
+        
+        if ($valid)
         {
-            $valid = $request->validate([
-                'email'     => 'required|email',
-                'password'  => 'required'
-            ]);
+            $credentials = $request->only('email', 'password');
+            $remember = $request->input('remember');
 
-            // dd($credentials);
             if (Auth::attempt($credentials, $remember)) $request->session()->regenerate();
             else $request->session()->flash('error', "Usuário ou senha inválido!");
         }
