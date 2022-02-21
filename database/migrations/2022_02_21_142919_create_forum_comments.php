@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateForumsTable extends Migration
+class CreateForumComments extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateForumsTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('forums')) {
-            Schema::create('forums', function (Blueprint $table) {
+        if (!Schema::hasTable('forum_comments')) {
+            Schema::create('forum_comments', function (Blueprint $table) {
                 $table->engine = 'InnoDB';
                 $table->id();
-                $table->string('title');
-                $table->text('message')->nullable();
-                $table->json('users')->nullable();
-                $table->boolean('private')->default(false);
                 $table->unsignedBigInteger('user_id');
+                $table->text('message');
+                $table->unsignedBigInteger('forum_id');
                 $table->timestamps();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('forum_id')->references('id')->on('forums')->onDelete('cascade');
             });
         }
     }
@@ -35,6 +34,6 @@ class CreateForumsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('forums');
+        Schema::dropIfExists('forum_comments');
     }
 }

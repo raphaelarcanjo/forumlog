@@ -35,4 +35,6 @@ Route::prefix('user')->group(function () {
 
 Route::prefix('forum')->group(function () {
     Route::match(['get', 'post'],'create', [ForumController::class,'create']);
+    Route::get('{id}', [ForumController::class, 'topic']);
+    Route::post('comment/{id}', [ForumController::class, 'comment']);
 });

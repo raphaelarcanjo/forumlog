@@ -12,7 +12,15 @@
             </p>
         </div>
     </div>
-    @foreach ($topics as $topic)
-        @php dd($topic)
-    @endforeach
+    <ul>
+        @foreach ($topics as $topic)
+            <li>
+                <a href="{{ url('forum/'.$topic->id) }}">
+                    {{ $topic->title }}
+                </a>
+                <span class="new badge" data-badge-caption="comentários">{{ $topic->comments_count }}</span>
+            </li>
+            <hr>
+        @endforeach
+    </ul>
 @endsection

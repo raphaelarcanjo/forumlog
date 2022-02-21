@@ -18,7 +18,7 @@ class HomeController extends Controller
             $blogs = Blog::withCount('comments')
                 ->with('user')
                 ->with('comments', 'comments.user')
-            ->orderBy('blogs.id', 'desc')
+                ->orderBy('blogs.id', 'desc')
                 ->get();
 
             $data['blogs'] = $blogs;
