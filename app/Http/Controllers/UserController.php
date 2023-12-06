@@ -44,11 +44,11 @@ class UserController extends Controller
                 if ($request->hasFile('photo')) {
                     $photo = $request->file('photo');
                     $photo_name = 'photo_'.$user->username.'.'.$photo->getClientOriginalExtension();
-    
+
                     $destination = public_path('users');
-    
+
                     $photo->move($destination, $photo_name);
-    
+
                     if (file_exists($destination.'/'.$photo_name)) $user->photo = $photo_name;
                     else $request->session()->flash('error','Erro ao fazer upload da imagem!');
                 }
@@ -59,7 +59,7 @@ class UserController extends Controller
                 $user->birth            = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
                 $user->password         = Hash::make($request->input('password'));
                 $user->save();
-    
+
                 $address                = Address::where('user_id', Auth::id())->first();
                 $address->cep           = (string) preg_replace('/[^0-9]/', '', $request->input('cep'));
                 $address->address       = $request->input('address');
@@ -69,7 +69,7 @@ class UserController extends Controller
                 $address->province      = $request->input('province');
                 $address->country       = $request->input('country');
                 $address->save();
-                
+
                 Phone::where('user_id', Auth::id())->delete();
 
                 foreach ($request->input('phones') as $number) {
@@ -113,7 +113,7 @@ class UserController extends Controller
             $valid = $request->validate([
                 'name'      => 'required|max:80',
                 'email'     => 'required|max:80',
-                'username'   => 'required|unique:users|max:32',
+                'username'  => 'required|unique:users|max:32',
                 'birth'     => 'required',
                 'password'  => 'required|confirmed|min:8',
                 'cep'       => 'required|max:9',
@@ -121,7 +121,7 @@ class UserController extends Controller
                 'complement'=> 'max:80',
                 'suburb'    => 'required|max:60',
                 'city'      => 'required|max:60',
-                'province'     => 'required|max:60',
+                'province'  => 'required|max:60',
                 'country'   => 'required|max:60',
             ]);
 
@@ -133,9 +133,9 @@ class UserController extends Controller
                 $user->email        = strtolower($request->input('email'));
                 $user->username     = strtolower($request->input('username'));
                 $user->birth        = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
-                $user->password     = Hash::make($request->input('password'));
+                $user->password     = $request->input('password');
                 $user->save();
-    
+
                 $address = new Address();
                 $address->user_id      = $user->id;
                 $address->cep          = (string) preg_replace('/[^0-9]/', '', $request->input('cep'));
@@ -146,7 +146,7 @@ class UserController extends Controller
                 $address->province     = $request->input('province');
                 $address->country      = $request->input('country');
                 $address->save();
-                
+
                 foreach ($request->input('phones') as $number) {
                     if (empty($number)) continue;
                     $phone = new Phone();
@@ -196,7 +196,7 @@ class UserController extends Controller
                 $status = Password::reset(
                     $request->only('email', 'password', 'password_confirmation', 'token'),
                     function ($user, $password) use ($request) {
-                        $user->forceFill(['password' => Hash::make($password)])->save();
+                        $user->forceFill(['password' => $password])->save();
                         $user->setRememberToken(Str::random(60));
 
                         event(new PasswordReset($user));
@@ -226,7 +226,7 @@ class UserController extends Controller
             'email'     => 'required|email',
             'password'  => 'required'
         ]);
-        
+
         if ($valid)
         {
             $credentials = $request->only('email', 'password');
@@ -256,7 +256,7 @@ class UserController extends Controller
         $correctarray = [];
 
         foreach($users as $user) {
-            $correctarray[$user->username] = url('public/users/'.$user->photo);
+            $correctarray[$user->username] = url('/users/'.$user->photo);
         }
 
         return json_encode($correctarray);
