@@ -35,15 +35,15 @@
                 <span class="helper-text" data-error="Formato de e-mail inválido" data-success="E-mail válido">Digite um e-mail válido</span>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ count($user->phones) > 0 != null?$user->phones[0]:'' ?? old('phones')[0] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
+                <input value="{{ count($user->phones) > 0 != null?$user->phones[0]->number:'' ?? old('phones')[0]->number }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
                 <label for="phone1">Telefone 1</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ count($user->phones) > 1 != null?$user->phones[1]:'' ?? old('phones')[1] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
+                <input value="{{ count($user->phones) > 1 != null?$user->phones[1]->number:'' ?? old('phones')[1]->number }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
                 <label for="phone2">Telefone 2</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ count($user->phones) > 2 != null?$user->phones[2]:'' ?? old('phones')[2] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
+                <input value="{{ count($user->phones) > 2 != null?$user->phones[2]->number:'' ?? old('phones')[2]->number }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
                 <label for="phone3">Telefone 3</label>
             </div>
         </div>

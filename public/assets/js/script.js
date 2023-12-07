@@ -27,8 +27,8 @@ var celOptions =  {
         $(field).mask(mask, celOptions);
 }};
 
-$(".phone").mask('(00) 0000-00000', celOptions)
-$(".cep").mask('00000-000')
+$(".phone").mask('(00) 00000-0000', celOptions)
+$(".cep").mask('00.000-000')
 $(".date").mask('00/00/0000')
 
 const getAddress = ()=> {
