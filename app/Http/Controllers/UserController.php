@@ -256,7 +256,7 @@ class UserController extends Controller
         $correctarray = [];
 
         foreach($users as $user) {
-            $correctarray[$user->username] = url('/users/'.$user->photo);
+            $correctarray[$user->username] = url('/public/users/'.$user->photo);
         }
 
         return json_encode($correctarray);

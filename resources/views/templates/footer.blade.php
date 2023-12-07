@@ -56,14 +56,14 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="/assets/js/script.js"></script>
+<script src="/public/assets/js/script.js"></script>
 
 @auth
     <script type="text/javascript">
         $(document).ready(()=> {
             $('input.autocomplete').autocomplete({
                 data: {
-                    "{{Auth::user()->username}}": "{{url('users/'.Auth::user()->photo)}}",
+                    "{{Auth::user()->username}}": "{{url('public/users/'.Auth::user()->photo)}}",
                 },
                 onAutocomplete: function(tag) {
                     window.location.href = "{{url('blog')}}/" + tag
