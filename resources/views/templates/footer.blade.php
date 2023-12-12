@@ -44,7 +44,7 @@
 
     <div class="footer-copyright">
         <div class="container">
-            &copy; 2020 Copyright <a href="https://github.com/raphaelarcanjo" target="_blank"class="grey-text text-lighten-2 right">Raphael Arcanjo</a>
+            &copy; <span id="copyright"></span> Copyright <a href="https://github.com/raphaelarcanjo" target="_blank"class="grey-text text-lighten-2 right">Raphael Arcanjo</a>
         </div>
     </div>
 </footer>

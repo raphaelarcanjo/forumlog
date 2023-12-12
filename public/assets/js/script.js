@@ -94,3 +94,8 @@ function preview_photo(event) {
     reader.onload = ()=> $("#previewPhoto").attr('src', reader.result)
     reader.readAsDataURL(event.target.files[0])
 }
+
+$(document).ready(() => {
+    const date = new Date()
+    $('#copyright').text(date.getFullYear())
+})

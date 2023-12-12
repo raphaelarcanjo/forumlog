@@ -8,14 +8,16 @@
     <form action="{{url('user/profile')}}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 m3">
                 <img src="{{url('public/users/'.$user->photo)}}" alt="Foto" width="200" height="200" id="previewPhoto">
+                <div class="row">
+                    <div class="col s12">
+                        <input type="file" accept="image/jpg, image/png, image/jpeg" id="photo" name="photo" onchange="preview_photo(event)" />
+                        <label for="photo"></label>
+                    </div>
+                </div>
             </div>
-            <div class="input-field col s12 m6">
-                <input type="file" accept="image/jpg, image/png, image/jpeg" id="photo" name="photo" onchange="preview_photo(event)" />
-                <label for="photo"></label>
-            </div>
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 m9">
                 <input value="{{ $user->name ?? old('name') }}" type="text" id="name" name="name" class="validate" />
                 <label for="name">Nome completo</label>
             </div>
@@ -27,8 +29,6 @@
                 <input value="{{ $user->birth ?? old('birth') }}" type="text" id="birth" name="birth" class="validate datepicker date" />
                 <label for="birth" class="active">Data de nascimento</label>
             </div>
-        </div>
-        <div class="row">
             <div class="input-field col s12 m3">
                 <input value="{{ $user->email ?? old('email') }}" type="email" id="email" name="email" class="validate" />
                 <label for="email">E-mail</label>
