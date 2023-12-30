@@ -8,25 +8,27 @@ use App\Models\Forum;
 
 class ForumController extends Controller
 {
-    public function index()
+    private $data;
+
+    public function __construct()
     {
-        $data = [
+        $this->data = [
             'title' => 'Forum'
         ];
+    }
+
+    public function index(Request $request)
+    {
         if (Auth::check()) {
-            $data['topics'] = Forum::all();
-            return view('forum.page', $data);
+            $this->data['topics'] = Forum::all();
+            return view('forum.page', $this->data);
         }
         
-        return view('forum.home', $data);
+        return view('forum.home', $this->data);
     }
 
     public function create(Request $request)
     {
-        $data = [
-            'title' => 'Forum'
-        ];
-
-        return view('forum.create', $data);
+        return view('forum.create', $this->data);
     }
 }

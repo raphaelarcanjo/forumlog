@@ -17,7 +17,7 @@ class UserController extends Controller
     public function profile(Request $request)
     {
         if (!empty($request->all())) {
-            $valid = $request->validate([
+            $request->validate([
                 'photo'     => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'name'      => 'required|max:80',
                 'email'     => 'required|email|max:80',
@@ -51,7 +51,6 @@ class UserController extends Controller
                 $user->email            = strtolower($request->input('email'));
                 $user->username         = strtolower($request->input('username'));
                 $user->birth            = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
-                $user->password         = $request->input('password');
                 $user->save();
 
                 $address                = Address::where('user_id', Auth::id())->first();

@@ -9,11 +9,12 @@
         @csrf
         <div class="row">
             <div class="input-field col s12 m3">
-                <img src="{{url('public/users/'.$user->photo)}}" alt="Foto" width="200" height="200" id="previewPhoto">
                 <div class="row">
                     <div class="col s12">
+                        <label for="photo">
+                            <img src="{{url('public/users/'.$user->photo)}}" alt="Foto" width="200" height="200" id="previewPhoto">
+                        </label>
                         <input type="file" accept="image/jpg, image/png, image/jpeg" id="photo" name="photo" onchange="preview_photo(event)" />
-                        <label for="photo"></label>
                     </div>
                 </div>
             </div>
