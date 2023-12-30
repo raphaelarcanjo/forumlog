@@ -6,10 +6,14 @@
 
     <form action="{{url('user/recover')}}" method="post">
         @csrf
-        <div class="input-field">
-            <input type="email" id="regemail" name="email" minlength="8" class="validate" required />
-            <label for="regemail">E-mail</label>
-        </div>
+        @if (request()->has('email'))
+            <input type="hidden" id="regemail" name="email" minlength="8" value="{{ request()->get('email') }}" />
+        @else
+            <div class="input-field">
+                <input type="email" id="regemail" name="email" minlength="8" class="validate" required />
+                <label for="regemail">E-mail</label>
+            </div>
+        @endif
 
         @isset ($token)
             <input type="hidden" name="token" value="{{$token ?? old('token')}}">

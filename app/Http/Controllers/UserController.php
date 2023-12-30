@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\MessageBag;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Phone;
 use App\Models\Address;
-
 
 class UserController extends Controller
 {
@@ -57,7 +51,7 @@ class UserController extends Controller
                 $user->email            = strtolower($request->input('email'));
                 $user->username         = strtolower($request->input('username'));
                 $user->birth            = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
-                $user->password         = Hash::make($request->input('password'));
+                $user->password         = $request->input('password');
                 $user->save();
 
                 $address                = Address::where('user_id', Auth::id())->first();
@@ -176,15 +170,10 @@ class UserController extends Controller
     public function recover(Request $request, $token = null)
     {
         $data['title'] = 'Recuperar Senha';
+        $data['token'] = $token;
 
-        if ($token)
-        {
-            $data['token'] = $token;
-
-            return view('recover', $data);
-        }
-
-        if ($request->input('email')) {
+        if (!$token && $request->input('email')) {
+            $msg = [];
             if ($request->input('password')) {
 
                 $request->validate([
@@ -195,7 +184,7 @@ class UserController extends Controller
 
                 $status = Password::reset(
                     $request->only('email', 'password', 'password_confirmation', 'token'),
-                    function ($user, $password) use ($request) {
+                    function ($user, $password) {
                         $user->forceFill(['password' => $password])->save();
                         $user->setRememberToken(Str::random(60));
 
@@ -203,18 +192,18 @@ class UserController extends Controller
                     }
                 );
 
-                if ($status == Password::PASSWORD_RESET) $request->session()->flash('success','Senha alterada com sucesso!');
-                else $request->session()->flash('error','Não foi possível alterar as senhas!');
+                if ($status == Password::PASSWORD_RESET) $msg = ['type' => 'success', 'text' => 'Senha alterada com sucesso!'];
+                else $msg = ['type' => 'error', 'text' => 'Não foi possível alterar as senhas!'];
             } else {
                 $request->validate(['email' => 'required|email']);
 
                 $status = Password::sendResetLink($request->only('email'));
 
-                if ($status == Password::RESET_LINK_SENT) $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
-                else  $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
+                if ($status == Password::RESET_LINK_SENT) $msg = ['type' => 'success', 'text' => 'Foi enviado o link de redefinição de senha para o seu e-mail.'];
+                else  $msg = ['type' => 'error', 'text' => 'E-mail não cadastrado em nossa base de dados.'];
             }
 
-            return redirect()->route('home');
+            return redirect()->route('home')->with($msg['type'], $msg['text']);
         }
 
         return view('recover', $data);
@@ -222,21 +211,23 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $valid = $request->validate([
+        $msg = [
+            'type' => '',
+            'text' => ''
+        ];
+
+        $request->validate([
             'email'     => 'required|email',
             'password'  => 'required'
         ]);
 
-        if ($valid)
-        {
-            $credentials = $request->only('email', 'password');
-            $remember = $request->input('remember');
+        $credentials = $request->only('email', 'password');
+        $remember = $request->input('remember');
 
-            if (Auth::attempt($credentials, $remember)) $request->session()->regenerate();
-            else $request->session()->flash('error', "Usuário ou senha inválido!");
-        }
+        if (Auth::attempt($credentials, $remember)) $request->session()->regenerate();
+        else $msg = ['type' => 'error', 'text' => "Usuário ou senha inválido!"];
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with($msg['type'], $msg['text']);
     }
 
     public function logout(Request $request)
