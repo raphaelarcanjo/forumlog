@@ -27,8 +27,8 @@ var celOptions =  {
         $(field).mask(mask, celOptions);
 }};
 
-$(".phone").mask('(00) 0000-00000', celOptions)
-$(".cep").mask('00000-000')
+$(".phone").mask('(00) 00000-0000', celOptions)
+$(".cep").mask('00.000-000')
 $(".date").mask('00/00/0000')
 
 const getAddress = ()=> {
@@ -36,31 +36,32 @@ const getAddress = ()=> {
 
     if (document.querySelector("#cep").checkValidity()) {
         $("#wait").show()
+        $("#cep").removeClass("valid invalid")
+        let cep = $("#cep").val().replace(/\D/g, "")
 
-        fetch('https://viacep.com.br/ws/' + $("#cep").val() + '/json/')
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
             .then(response => response.json())
             .then(data => {
-                if (data.erro) {
-                    $("#wait").hide()
-                    $("#cepMsg").attr('data-error', "CEP não encontrado")
-                    $("#cep").removeClass("valid")
-                    $("#cep").addClass("invalid")
-                }
-                else {
-                    $("#address").val(data.logradouro)
-                    $("#address~label").addClass("active")
-                    $("#complement").val(data.complemento)
-                    $("#complement~label").addClass("active")
-                    $("#suburb").val(data.bairro)
-                    $("#suburb~label").addClass("active")
-                    $("#city").val(data.localidade)
-                    $("#city~label").addClass("active")
-                    $("#province").val(data.uf)
-                    $("#province~label").addClass("active")
-                    $("#country").val("Brasil")
-                    $("#country~label").addClass("active")
-                    $("#wait").hide()
-                }
+                $("#wait").hide()
+                $("#address").val(data.logradouro)
+                $("#address~label").addClass("active")
+                $("#complement").val(data.complemento)
+                $("#complement~label").addClass("active")
+                $("#suburb").val(data.bairro)
+                $("#suburb~label").addClass("active")
+                $("#city").val(data.localidade)
+                $("#city~label").addClass("active")
+                $("#province").val(data.uf)
+                $("#province~label").addClass("active")
+                $("#country").val("Brasil")
+                $("#country~label").addClass("active")
+            })
+            .catch(error => {
+                console.error(error)
+                $("#wait").hide()
+                $("#cepMsg").attr('data-error', "CEP não encontrado")
+                $("#cep").removeClass("valid")
+                $("#cep").addClass("invalid")
             })
     }
 }
@@ -93,3 +94,8 @@ function preview_photo(event) {
     reader.onload = ()=> $("#previewPhoto").attr('src', reader.result)
     reader.readAsDataURL(event.target.files[0])
 }
+
+$(document).ready(() => {
+    const date = new Date()
+    $('#copyright').text(date.getFullYear())
+})

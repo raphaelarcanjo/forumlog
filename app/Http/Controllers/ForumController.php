@@ -9,21 +9,27 @@ use App\Models\ForumComment;
 
 class ForumController extends Controller
 {
-    public function index()
+    private $data;
+
+    public function __construct()
     {
-        $data = [
+        $this->data = [
             'title' => 'Forum'
         ];
+    }
+
+    public function index(Request $request)
+    {
         if (Auth::check()) {
-            $data['topics'] = Forum::withCount('comments')
+            $this->data['topics'] = Forum::withCount('comments')
                 ->with('user')
                 ->with('comments', 'comments.user')
                 ->orderBy('forums.id', 'desc')
                 ->get();
-            return view('forum.page', $data);
+            return view('forum.page', $this->data);
         }
         
-        return view('forum.home', $data);
+        return view('forum.home', $this->data);
     }
 
     public function create(Request $request)
@@ -47,11 +53,7 @@ class ForumController extends Controller
             else $request->session()->flash('error','Não foi possível criar o tópico!');
         }
 
-        $data = [
-            'title' => 'Forum'
-        ];
-
-        return view('forum.create', $data);
+        return view('forum.create', $this->data);
     }
 
     public function topic($id)
@@ -60,12 +62,11 @@ class ForumController extends Controller
             ->with('comments', 'comments.user')
             ->find($id);
         
-        $data = [
-            'title' => 'Forum',
+        $this->data = [
             'forum' => $forum
         ];
 
-        return view('forum.topic', $data);
+        return view('forum.topic', $this->data);
     }
 
     public function comment(Request $request, $id)

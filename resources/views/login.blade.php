@@ -26,7 +26,7 @@
                             <label for="passwordM">Senha</label>
                             <input type="password" name="password" id="passwordM" class="validate" required />
                         </div>
-                        <div class="input-field center-align">
+                        <div class="input-field left-align">
                             <p>
                                 <label>
                                     <input type="checkbox" class="filled-in" name="remember" value="1" />
@@ -34,14 +34,18 @@
                                 </label>
                             </p>
                         </div>
-                        <div class="input-field left">
-                            <a href="{{url('user/register')}}" type="submit" class="waves-effect waves-light btn-small red lighten-2">Cadastre-se</a>
+                        <div class="row">
+                            <div class="input-field col left">
+                                <a href="{{url('user/register')}}" type="submit" class="waves-effect waves-light btn-small red lighten-2">Cadastre-se</a>
+                            </div>
+                            <div class="input-field col right">
+                                <button type="submit" class="waves-effect waves-light btn-small">Entrar</button>
+                            </div>
                         </div>
-                        <div class="input-field right">
-                            <button type="submit" class="waves-effect waves-light btn-small">Entrar</button>
-                        </div>
-                        <div class="input-field left-align">
-                            <a href="{{url('user/recover')}}">Recuperar senha</a>
+                        <div class="row">
+                            <div class="input-field right-align col s12">
+                                <a href="{{url('user/recover')}}">Recuperar senha</a>
+                            </div>
                         </div>
                     </form>
                 </div>

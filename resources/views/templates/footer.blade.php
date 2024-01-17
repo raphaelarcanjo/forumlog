@@ -44,7 +44,7 @@
 
     <div class="footer-copyright">
         <div class="container">
-            &copy; 2020 Copyright <a href="https://github.com/raphaelarcanjo" target="_blank"class="grey-text text-lighten-2 right">Raphael Arcanjo</a>
+            &copy; <span id="copyright"></span> Copyright <a href="https://github.com/raphaelarcanjo" target="_blank"class="grey-text text-lighten-2 right">Raphael Arcanjo</a>
         </div>
     </div>
 </footer>
@@ -56,7 +56,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="{{asset('js/script.js?v=1.5')}}"></script>
+<script src="/public/assets/js/script.js"></script>
 
 @auth
     <script type="text/javascript">

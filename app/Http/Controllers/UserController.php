@@ -2,32 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\RecoverPass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\MessageBag;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Phone;
 use App\Models\Address;
 
-
 class UserController extends Controller
 {
     public function profile(Request $request)
     {
         if (!empty($request->all())) {
-            $valid = $request->validate([
+            $request->validate([
                 'photo'     => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'name'      => 'required|max:80',
                 'email'     => 'required|email|max:80',
-                'cep'       => 'required|max:9',
+                'cep'       => 'required|max:10',
                 'address'   => 'required|max:120',
                 'complement'=> 'required|max:60',
                 'suburb'    => 'required|max:60',
@@ -44,11 +38,11 @@ class UserController extends Controller
                 if ($request->hasFile('photo')) {
                     $photo = $request->file('photo');
                     $photo_name = 'photo_'.$user->username.'.'.$photo->getClientOriginalExtension();
-    
+
                     $destination = public_path('users');
-    
+
                     $photo->move($destination, $photo_name);
-    
+
                     if (file_exists($destination.'/'.$photo_name)) $user->photo = $photo_name;
                     else $request->session()->flash('error','Erro ao fazer upload da imagem!');
                 }
@@ -57,9 +51,8 @@ class UserController extends Controller
                 $user->email            = strtolower($request->input('email'));
                 $user->username         = strtolower($request->input('username'));
                 $user->birth            = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
-                $user->password         = Hash::make($request->input('password'));
                 $user->save();
-    
+
                 $address                = Address::where('user_id', Auth::id())->first();
                 $address->cep           = (string) preg_replace('/[^0-9]/', '', $request->input('cep'));
                 $address->address       = $request->input('address');
@@ -69,7 +62,7 @@ class UserController extends Controller
                 $address->province      = $request->input('province');
                 $address->country       = $request->input('country');
                 $address->save();
-                
+
                 Phone::where('user_id', Auth::id())->delete();
 
                 foreach ($request->input('phones') as $number) {
@@ -113,15 +106,15 @@ class UserController extends Controller
             $valid = $request->validate([
                 'name'      => 'required|max:80',
                 'email'     => 'required|max:80',
-                'username'   => 'required|unique:users|max:32',
+                'username'  => 'required|unique:users|max:32',
                 'birth'     => 'required',
                 'password'  => 'required|confirmed|min:8',
-                'cep'       => 'required|max:9',
+                'cep'       => 'required|max:10',
                 'address'   => 'required|max:120',
                 'complement'=> 'max:80',
                 'suburb'    => 'required|max:60',
                 'city'      => 'required|max:60',
-                'province'     => 'required|max:60',
+                'province'  => 'required|max:60',
                 'country'   => 'required|max:60',
             ]);
 
@@ -133,9 +126,9 @@ class UserController extends Controller
                 $user->email        = strtolower($request->input('email'));
                 $user->username     = strtolower($request->input('username'));
                 $user->birth        = date('Y-m-d', strtotime(str_replace('/','-',$request->input('birth'))));
-                $user->password     = Hash::make($request->input('password'));
+                $user->password     = $request->input('password');
                 $user->save();
-    
+
                 $address = new Address();
                 $address->user_id      = $user->id;
                 $address->cep          = (string) preg_replace('/[^0-9]/', '', $request->input('cep'));
@@ -146,7 +139,7 @@ class UserController extends Controller
                 $address->province     = $request->input('province');
                 $address->country      = $request->input('country');
                 $address->save();
-                
+
                 foreach ($request->input('phones') as $number) {
                     if (empty($number)) continue;
                     $phone = new Phone();
@@ -176,15 +169,10 @@ class UserController extends Controller
     public function recover(Request $request, $token = null)
     {
         $data['title'] = 'Recuperar Senha';
+        $data['token'] = $token;
 
-        if ($token)
-        {
-            $data['token'] = $token;
-
-            return view('recover', $data);
-        }
-
-        if ($request->input('email')) {
+        if (!$token && $request->input('email')) {
+            $msg = [];
             if ($request->input('password')) {
 
                 $request->validate([
@@ -195,26 +183,26 @@ class UserController extends Controller
 
                 $status = Password::reset(
                     $request->only('email', 'password', 'password_confirmation', 'token'),
-                    function ($user, $password) use ($request) {
-                        $user->forceFill(['password' => Hash::make($password)])->save();
+                    function ($user, $password) {
+                        $user->forceFill(['password' => $password])->save();
                         $user->setRememberToken(Str::random(60));
 
                         event(new PasswordReset($user));
                     }
                 );
 
-                if ($status == Password::PASSWORD_RESET) $request->session()->flash('success','Senha alterada com sucesso!');
-                else $request->session()->flash('error','Não foi possível alterar as senhas!');
+                if ($status == Password::PASSWORD_RESET) $msg = ['type' => 'success', 'text' => 'Senha alterada com sucesso!'];
+                else $msg = ['type' => 'error', 'text' => 'Não foi possível alterar as senhas!'];
             } else {
                 $request->validate(['email' => 'required|email']);
 
                 $status = Password::sendResetLink($request->only('email'));
 
-                if ($status == Password::RESET_LINK_SENT) $request->session()->flash('success','Foi enviado o link de redefinição de senha para o seu e-mail.');
-                else  $request->session()->flash('error','E-mail não cadastrado em nossa base de dados.');
+                if ($status == Password::RESET_LINK_SENT) $msg = ['type' => 'success', 'text' => 'Foi enviado o link de redefinição de senha para o seu e-mail.'];
+                else  $msg = ['type' => 'error', 'text' => 'E-mail não cadastrado em nossa base de dados.'];
             }
 
-            return redirect()->route('home');
+            return redirect()->route('home')->with($msg['type'], $msg['text']);
         }
 
         return view('recover', $data);
@@ -222,21 +210,23 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $valid = $request->validate([
+        $msg = [
+            'type' => '',
+            'text' => ''
+        ];
+
+        $request->validate([
             'email'     => 'required|email',
             'password'  => 'required'
         ]);
-        
-        if ($valid)
-        {
-            $credentials = $request->only('email', 'password');
-            $remember = $request->input('remember');
 
-            if (Auth::attempt($credentials, $remember)) $request->session()->regenerate();
-            else $request->session()->flash('error', "Usuário ou senha inválido!");
-        }
+        $credentials = $request->only('email', 'password');
+        $remember = $request->input('remember');
 
-        return redirect()->route('home');
+        if (Auth::attempt($credentials, $remember)) $request->session()->regenerate();
+        else $msg = ['type' => 'error', 'text' => "Usuário ou senha inválido!"];
+
+        return redirect()->route('home')->with($msg['type'], $msg['text']);
     }
 
     public function logout(Request $request)
@@ -256,7 +246,7 @@ class UserController extends Controller
         $correctarray = [];
 
         foreach($users as $user) {
-            $correctarray[$user->username] = url('public/users/'.$user->photo);
+            $correctarray[$user->username] = url('/public/users/'.$user->photo);
         }
 
         return json_encode($correctarray);

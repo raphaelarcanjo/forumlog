@@ -5,7 +5,7 @@
     <nav>
         <div class="nav-wrapper">
             <a href="{{url('/')}}" class="brand-logo">
-                <img src="{{asset('img/logo-rgba.png')}}" alt="ForumLog">
+                <img src="/public/assets/img/logo-rgba.png" alt="ForumLog">
             </a>
 
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>

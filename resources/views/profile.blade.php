@@ -8,14 +8,17 @@
     <form action="{{url('user/profile')}}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
-            <div class="input-field col s12 m6">
-                <img src="{{url('public/users/'.$user->photo)}}" alt="Foto" width="200" height="200" id="previewPhoto">
+            <div class="input-field col s12 m3">
+                <div class="row">
+                    <div class="col s12">
+                        <label for="photo">
+                            <img src="{{url('public/users/'.$user->photo)}}" alt="Foto" width="200" height="200" id="previewPhoto">
+                        </label>
+                        <input type="file" accept="image/jpg, image/png, image/jpeg" id="photo" name="photo" onchange="preview_photo(event)" />
+                    </div>
+                </div>
             </div>
-            <div class="input-field col s12 m6">
-                <input type="file" accept="image/jpg, image/png, image/jpeg" id="photo" name="photo" onchange="preview_photo(event)" />
-                <label for="photo"></label>
-            </div>
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 m9">
                 <input value="{{ $user->name ?? old('name') }}" type="text" id="name" name="name" class="validate" />
                 <label for="name">Nome completo</label>
             </div>
@@ -27,23 +30,21 @@
                 <input value="{{ $user->birth ?? old('birth') }}" type="text" id="birth" name="birth" class="validate datepicker date" />
                 <label for="birth" class="active">Data de nascimento</label>
             </div>
-        </div>
-        <div class="row">
             <div class="input-field col s12 m3">
                 <input value="{{ $user->email ?? old('email') }}" type="email" id="email" name="email" class="validate" />
                 <label for="email">E-mail</label>
                 <span class="helper-text" data-error="Formato de e-mail inválido" data-success="E-mail válido">Digite um e-mail válido</span>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ count($user->phones) > 0 != null?$user->phones[0]:'' ?? old('phones')[0] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
+                <input value="{{ count($user->phones) > 0 != null?$user->phones[0]->number:'' ?? old('phones')[0]->number }}" type="text" class="phone" minlength="14" maxlength="15" id="phone1" name="phones[]" />
                 <label for="phone1">Telefone 1</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ count($user->phones) > 1 != null?$user->phones[1]:'' ?? old('phones')[1] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
+                <input value="{{ count($user->phones) > 1 != null?$user->phones[1]->number:'' ?? old('phones')[1]->number }}" type="text" class="phone" minlength="14" maxlength="15" id="phone2" name="phones[]" />
                 <label for="phone2">Telefone 2</label>
             </div>
             <div class="input-field col s12 m3">
-                <input value="{{ count($user->phones) > 2 != null?$user->phones[2]:'' ?? old('phones')[2] }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
+                <input value="{{ count($user->phones) > 2 != null?$user->phones[2]->number:'' ?? old('phones')[2]->number }}" type="text" class="phone" minlength="14" maxlength="15" id="phone3" name="phones[]" />
                 <label for="phone3">Telefone 3</label>
             </div>
         </div>
