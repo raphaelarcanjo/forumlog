@@ -58,27 +58,22 @@ class ForumController extends Controller
 
     public function topic($id)
     {
-        $forum = Forum::with('user')
+        $this->data['forum'] = Forum::with('user')
             ->with('comments', 'comments.user')
             ->find($id);
-        
-        $this->data = [
-            'forum' => $forum
-        ];
 
         return view('forum.topic', $this->data);
     }
 
-    public function comment(Request $request, $id)
+    public function comment(Request $request)
     {
         $comment = new ForumComment();
 
         $comment['message'] = $request->input('message');
-        $comment['forum_id'] = $id;
+        $comment['forum_id'] = $request->input('forum_id');
         $comment['user_id'] = Auth::id();
+        $comment->save();
         
-        if (!$comment->save()) $request->session()->flash('error','Não foi possível criar o comentário!');
-        
-        return redirect('forum/'.$id);
+        return redirect('forum/'.$request->input('forum_id'));
     }
 }

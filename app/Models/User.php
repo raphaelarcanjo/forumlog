@@ -58,4 +58,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(Address::class);
     }
+
+    public function forum()
+    {
+        return $this->hasMany(Forum::class);
+    }
+
+    public function blog_comment()
+    {
+        return $this->hasMany(BlogComment::class);
+    }
+
+    public function forum_comment()
+    {
+        return $this->hasMany(ForumComment::class);
+    }
 }

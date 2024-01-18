@@ -9,6 +9,8 @@ class BlogComment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [ 'message', 'blog_id', 'user_id' ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

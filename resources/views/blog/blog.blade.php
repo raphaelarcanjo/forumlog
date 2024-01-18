@@ -25,12 +25,14 @@
                 <p>{{$blog->message}}</p>
             </div>
 
-            @can('delete-blog', $blog)
+            @can('delete_post', $blog)
                 <div class="card-action">
                     <a href="{{url('blog/delete/'.$blog->id)}}" class="waves-effect waves-red btn-flat red-text"><i class="material-icons left">delete</i>Excluir post</a>
-                    <a href="{{url('blog/private/'.$blog->id)}}" class="btn waves-effect waves-light {{($blog->private) ? 'green' : 'red'}}" title="Torna o post privado ou não, liberando ou proibindo comentários">
-                        <i class="material-icons left">{{ ($blog->private) ? 'do_not_disturb_off' : 'do_not_disturb_on' }}</i>{{($blog->private) ? 'Não privado' : 'Privado'}}
-                    </a>
+                    @can('update_post', $blog)
+                        <a href="{{url('blog/private/'.$blog->id)}}" class="btn waves-effect waves-light {{($blog->private) ? 'green' : 'red'}}" title="Torna o post privado ou não, liberando ou proibindo comentários">
+                            <i class="material-icons left">{{ ($blog->private) ? 'do_not_disturb_off' : 'do_not_disturb_on' }}</i>{{($blog->private) ? 'Não privado' : 'Privado'}}
+                        </a>
+                    @endcan
                 </div>
             @endcan
 
@@ -46,7 +48,7 @@
                             <p class="card-title">Comentários</p>
                             @foreach ($blog->comments as $comment)
                                 <p>
-                                    @can ('delete-comment', $comment)
+                                    @can ('delete_comment', $comment)
                                         <a href="{{url('blog/deletecomment/'.$comment->id)}}" class="btn-flat waves-effect waves-red" style="padding: 0">
                                             <i class="material-icons">delete</i>
                                         </a>

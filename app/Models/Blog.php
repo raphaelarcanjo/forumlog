@@ -9,6 +9,8 @@ class Blog extends Model
 {
     use HasFactory;
 
+    protected $fillable = [ 'message', 'private', 'user_id' ];
+
     public function comments()
     {
         return $this->hasMany(BlogComment::class)->orderBy('id', 'desc');

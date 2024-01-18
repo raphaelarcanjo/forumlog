@@ -10,14 +10,22 @@ use App\Models\BlogComment;
 
 class BlogController extends Controller
 {
+    private $data;
+
+    public function __construct()
+    {
+        $this->data = [
+            'title' => 'Blog'
+        ];
+    }
+
     public function index(Request $request, $username = null)
     {
-        $data['title'] = 'Blog';
-        $data['name'] = null;
+        $this->data['name'] = null;
         $perfil = null;
 
         if (Auth::check()) $perfil = Auth::user();
-        else return view('blog.home', $data);
+        else return view('blog.home', $this->data);
 
         if ($username) {
             $perfil = User::where([
@@ -27,25 +35,23 @@ class BlogController extends Controller
                 ->first();
         }
 
-        if ($perfil)
-        {
+        if ($perfil) {
             $blogs = Blog::withCount('comments')
                 ->with('comments', 'comments.user')
                 ->orderBy('blogs.id', 'desc')
                 ->get();
 
-            $data['blogs']     = $blogs;
-            $data['fullname']  = $perfil['name'];
-            $data['username']  = $perfil['username'];
-            $data['id']        = $perfil['id'];
-            $data['name']      = explode(' ',$perfil['name'])[0];
-        }
-        else {
+            $this->data['blogs']     = $blogs;
+            $this->data['fullname']  = $perfil['name'];
+            $this->data['username']  = $perfil['username'];
+            $this->data['id']        = $perfil['id'];
+            $this->data['name']      = explode(' ',$perfil['name'])[0];
+        } else {
             $request->session()->flash('error', 'Blog não encontrado.');
             return redirect()->route('home');
         }
 
-        return view('blog.blog', $data);
+        return view('blog.blog', $this->data);
     }
 
     public function create(Request $request)
@@ -55,40 +61,35 @@ class BlogController extends Controller
                 'message' => 'required|max:150'
             ]);
 
-            $blog = new Blog();
+            $persist = User::find(Auth::id())->blog()->create([
+                'message' => $request->input('message'),
+                'private' => (bool) $request->input('private')
+            ]);
 
-            $blog['message']    = $request->input('message');
-            $blog['private']    = (bool) $request->input('private');
-            $blog['user_id'] = Auth::id();
-
-            if ($blog->save()) {
+            if ($persist) {
                 $request->session()->flash('success','Post criado!');
                 return redirect('blog/'.session('user'));
-            }
-            else $request->session()->flash('error','Não foi possível criar o post!');
+            } else $request->session()->flash('error','Não foi possível criar o post!');
         }
 
         $data['title'] = 'Blog';
 
-        return view('blog.create', $data);
+        return view('blog.create', $this->data);
     }
 
     public function private(Request $request, $id)
     {
-        $state = Blog::where('id', $id)->first();
-        $state->private = ! $state->private;
-
-        if ($state->update()) {
-            BlogComment::where('blog_id', $id)->delete();
-            $request->session()->flash('success','Post atualizado!');
-        }
+        $blog = Blog::find($id);
+        $blog->update([ 'private' => ! $blog['private'] ]);
+        $blog->comments()->delete();
+        $request->session()->flash('success','Post atualizado!');
 
         return redirect()->back();
     }
 
     public function delete(Request $request, $id)
     {
-        Blog::where('id', $id)->delete();
+        Blog::find($id)->delete();
         $request->session()->flash('success','Post excluído!');
 
         return redirect()->back();
@@ -100,19 +101,19 @@ class BlogController extends Controller
             'comment' => 'required|max:150',
         ]);
 
-        $comment = new BlogComment();
+        $persist = User::find(Auth::user()->id)->blog_comment()->create([
+            'message' => $request->input('comment'),
+            'blog_id' => $request->input('blog_id')
+        ]);
 
-        $comment['message'] = $request->input('comment');
-        $comment['blog_id'] = $request->input('blog_id');
-        $comment['user_id'] = Auth::user()->id;
-        $comment->save();
+        if (! $persist) $request->session()->flash('error','Não foi possível criar o post!');
 
         return redirect()->back();
     }
 
     public function deleteComment(Request $request, $id)
     {
-        BlogComment::where('id', $id)->delete();
+        BlogComment::find($id)->delete();
         $request->session()->flash('success','Comentário excluído!');
 
         return redirect()->back();

@@ -20,8 +20,9 @@
             </ul>
         </div>
         <div class="col s12">
-            <form action="{{ url('forum/comment/'.$forum->id) }}" method="post">
+            <form action="{{ url('forum/comment') }}" method="post">
                 @csrf
+                <input type="hidden" name="forum_id" value="{{ $forum->id }}">
                 <div class="input-field">
                     <input type="text" name="message" id="comment_message" required="">
                     <label for="comment_message">Comentário</label>
